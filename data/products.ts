@@ -30,11 +30,11 @@ const productNames: string[] = [
   "Urban Crest",
   "Metro Heritage",
   "Urban Royale",
-  "Dark Horizon",
-  "Regal Line",
   "Urban Crown",
-  "Royal Street",
+  "Regal Line",
+  "Dark Horizon",
   "Midnight Avenue",
+  "Royal Street",
   "Noble Meridian",
 ];
 
