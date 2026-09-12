@@ -2,21 +2,22 @@ import { Product } from "@/types";
 import { SALE_PRICE } from "@/lib/pricing";
 
 const PRODUCT_DESCRIPTION = `### Shirt Details
-- Export Quality Premium Shirt
-- 100% Cotton Fabric
-- Fabric Weight: 210-230 GSM
-- Soft & Comfortable
-- Durable Stitching
-
-### Features
-- Premium Quality
-- Perfect fit for everyday wear
+- Fabric: 100% Cotton
+- GSM: Approx. 150 GSM
+- Quality: Export Quality
+- Fit: Regular Fit
+- Feel: Soft, Lightweight, Breathable & Comfortable
+- Comfort: Lightweight & Airy
+- Suitable For: Summer & Everyday Wear
 
 ### Wash Care
-- Machine or hand wash with cold/normal water.
-- Use mild detergent.
-- Do not bleach.
-- Avoid direct sunlight while drying.
+- Machine Wash: Cold water / gentle cycle
+- Detergent: Use mild detergent
+- Bleach: Do not bleach
+- Drying: Dry in shade; avoid prolonged direct sunlight
+- Ironing: Iron on low to medium heat
+- Dry Clean: Not required
+- Tip: Wash dark and light colors separately.
 
 ### Delivery Information
 - Inside Dhaka: 1–2 working days
