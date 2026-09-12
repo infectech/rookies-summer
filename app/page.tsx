@@ -5,7 +5,7 @@ import Image from "next/image";
 import { ShoppingBag } from "lucide-react";
 import { ProductCard } from "@/components/ProductCard";
 import ProductModal from "@/components/ProductModal";
-import { products } from "@/data/products";
+import { useProducts } from "@/hooks/use-products";
 import { Product } from "@/types";
 import { useCart } from "@/hooks/use-cart";
 import { formatCurrency } from "@/lib/utils";
@@ -19,6 +19,7 @@ export default function Home() {
   const itemCount = useCart((s) => s.itemCount());
   const subtotal = useCart((s) => s.subtotal());
   const openCart = useCart((s) => s.openCart);
+  const products = useProducts();
 
   const handleSelect = (product: Product) => {
     setSelectedProduct(product);
@@ -44,10 +45,10 @@ export default function Home() {
       <section id="products" className="mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="mb-10 text-center">
           <h2 className="font-heading text-3xl font-semibold text-black">
-            Shop All Shirts
+            Most Summer Friendly Shirts
           </h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Premium quality shirts with cash on delivery available anywhere in Bangladesh.
+            Enjoy 40% discount and free delivery on shopping 1500 TK or more.
           </p>
         </div>
 

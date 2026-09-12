@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { getDeliveryCharge, getRegularDeliveryCharge } from "@/lib/config";
 import { BLUR_PLACEHOLDER } from "@/lib/image";
 import { Size } from "@/types";
-import { getProductByCode } from "@/data/products";
+import { useProducts } from "@/hooks/use-products";
 import {
   getCartQuantity,
   getCartUnitPrice,
@@ -29,6 +29,9 @@ export default function OrderSummary({ district }: OrderSummaryProps) {
   const removeItem = useCart((s) => s.removeItem);
   const itemCount = getCartQuantity(items);
   const unitPrice = getCartUnitPrice(items);
+  const products = useProducts();
+  const getProductByCode = (code: string) =>
+    products.find((p) => p.code === code);
   const deliveryCharge =
     district ? getDeliveryCharge(district, itemCount) : null;
   const regularDeliveryCharge =

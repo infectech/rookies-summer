@@ -22,7 +22,7 @@ import {
 import { formatCurrency } from "@/lib/utils";
 import { BLUR_PLACEHOLDER } from "@/lib/image";
 import { Size } from "@/types";
-import { getProductByCode } from "@/data/products";
+import { useProducts } from "@/hooks/use-products";
 
 export default function CartDrawer() {
   const isOpen = useCart((s) => s.isOpen);
@@ -32,6 +32,9 @@ export default function CartDrawer() {
   const updateSize = useCart((s) => s.updateSize);
   const removeItem = useCart((s) => s.removeItem);
   const subtotal = useCart((s) => s.subtotal());
+  const products = useProducts();
+  const getProductByCode = (code: string) =>
+    products.find((p) => p.code === code);
   const cartQuantity = getCartQuantity(items);
   const unitPrice = getCartUnitPrice(items);
 
