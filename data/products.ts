@@ -63,15 +63,9 @@ const productsInCodeOrder: Product[] = productNames.map((name, index) => {
   };
 });
 
-const TOTAL_SIZES = 4;
-
-function availableSizeCount(product: Product): number {
-  return TOTAL_SIZES - (product.outOfStockSizes?.length ?? 0);
-}
-
-export const products: Product[] = [...productsInCodeOrder].sort(
-  (a, b) => availableSizeCount(b) - availableSizeCount(a)
-);
+// Availability-based sorting happens live in hooks/use-products.ts,
+// once real stock data is merged in.
+export const products: Product[] = productsInCodeOrder;
 
 export function getProductByCode(code: string): Product | undefined {
   return products.find((p) => p.code === code);
