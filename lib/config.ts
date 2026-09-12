@@ -11,7 +11,7 @@ export const SITE_CONFIG = {
 
 export const DELIVERY_CHARGE_DHAKA = 70;
 export const DELIVERY_CHARGE_OUTSIDE_DHAKA = 130;
-export const DELIVERY_CHARGE_MULTIBUY = 50;
+export const DELIVERY_CHARGE_MULTIBUY = 0;
 
 export const DISTRICTS = [
   "Bagerhat", "Bandarban", "Barguna", "Barishal", "Bhola", "Bogura",

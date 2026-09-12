@@ -119,7 +119,7 @@ export default function RootLayout({
         <PixelInit />
         <div className="w-full overflow-hidden bg-black py-2 text-xs font-semibold uppercase tracking-widest text-gold sm:text-sm">
           <Marquee speed={70}>
-            🎉 Buy 2 or more shirts and get 50% discount + 50tk Delivery Charge!
+            🎉 Buy 2 or more shirts and get FREE Delivery!
           </Marquee>
         </div>
         <Header />

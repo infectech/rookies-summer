@@ -1,8 +1,8 @@
 import { CartItem } from "@/types";
 
-export const ORIGINAL_PRICE = 1200;
-export const SALE_PRICE = 700;
-export const MULTIBUY_PRICE = 600;
+export const ORIGINAL_PRICE = 1250;
+export const SALE_PRICE = 750;
+export const MULTIBUY_PRICE = 750;
 
 export function getDiscountPercent(
   originalPrice = ORIGINAL_PRICE,
@@ -45,7 +45,7 @@ export function getDeliveryChargeForItems(
   items: Pick<CartItem, "quantity">[]
 ) {
   if (hasMultiBuyDiscount(items)) {
-    return 50;
+    return 0;
   }
   return getRegularDeliveryCharge(district);
 }
