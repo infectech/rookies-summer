@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { ShoppingCart, TriangleAlert } from "lucide-react";
@@ -26,10 +26,15 @@ export function ProductCard({ product, onSelect, index = 0 }: ProductCardProps) 
     (s) => !product.outOfStockSizes?.includes(s)
   );
   const [size, setSize] = useState<Size>(() => availableSizes[0] ?? "M");
-  const isStockout =
-    availableSizes.length === 0 ||
-    (product.outOfStockSizes?.includes(size) ?? false);
+  const isStockout = availableSizes.length === 0;
   const addItem = useCart((s) => s.addItem);
+
+  useEffect(() => {
+    if (product.outOfStockSizes?.includes(size)) {
+      setSize(availableSizes[0] ?? size);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [product.outOfStockSizes]);
 
   const handleAddToCart = () => {
     if (!size || product.outOfStockSizes?.includes(size)) return;
