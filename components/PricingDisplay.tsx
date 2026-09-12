@@ -1,6 +1,7 @@
 import { useCart } from "@/hooks/use-cart";
 import {
   getCartQuantity,
+  getDiscountPercent,
   MULTIBUY_PRICE,
   ORIGINAL_PRICE,
   SALE_PRICE,
@@ -19,6 +20,7 @@ export default function PricingDisplay({
   const items = useCart((s) => s.items);
   const qty = getCartQuantity(items);
   const currentSalePrice = qty >= 2 ? MULTIBUY_PRICE : SALE_PRICE;
+  const discountPercent = getDiscountPercent(ORIGINAL_PRICE, currentSalePrice);
 
   return (
     <div className={cn("flex flex-wrap items-center gap-2", className)}>
@@ -34,7 +36,10 @@ export default function PricingDisplay({
         {formatCurrency(currentSalePrice)}
       </span>
       <span className="rounded-full bg-[#E53935]/10 px-2 py-0.5 text-[11px] font-bold text-[#E53935]">
-        Special Offer
+        {discountPercent}% off
+      </span>
+      <span className="rounded-full bg-[#E53935]/10 px-2 py-0.5 text-[11px] font-bold text-[#E53935]">
+        Limited Time
       </span>
     </div>
   );
