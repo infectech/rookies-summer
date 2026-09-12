@@ -23,7 +23,7 @@ export default function PricingDisplay({
   const discountPercent = getDiscountPercent(ORIGINAL_PRICE, currentSalePrice);
 
   return (
-    <div className={cn("flex flex-wrap items-center gap-2", className)}>
+    <div className={cn("flex flex-wrap items-center gap-2 sm:flex-nowrap", className)}>
       <span className="text-muted-foreground line-through">
         {formatCurrency(ORIGINAL_PRICE)}
       </span>
