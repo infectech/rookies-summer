@@ -9,6 +9,7 @@ export interface Product {
   images: string[];
   outOfStockSizes?: Size[];
   isNewArrival?: boolean;
+  isCheckShirt?: boolean;
 }
 
 export interface CartItem {
