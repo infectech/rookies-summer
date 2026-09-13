@@ -19,7 +19,8 @@ import {
 } from "@/components/ui/select";
 import { useCart } from "@/hooks/use-cart";
 import { DISTRICTS, getDeliveryCharge } from "@/lib/config";
-import { getCartQuantity, getCartUnitPrice } from "@/lib/pricing";
+import { getUnitPriceForProduct } from "@/lib/pricing";
+import { formatCurrency } from "@/lib/utils";
 import { trackPurchase } from "@/lib/pixel";
 import { OrderPayload, OrderResponse } from "@/types";
 import OrderSummary from "@/components/OrderSummary";
@@ -71,9 +72,7 @@ export default function CheckoutForm({
     if (items.length === 0) return;
     setSubmitting(true);
 
-    const itemCount = getCartQuantity(items);
-    const unitPrice = getCartUnitPrice(items);
-    const deliveryCharge = getDeliveryCharge(values.district, itemCount);
+    const deliveryCharge = getDeliveryCharge(values.district, subtotal);
     const total = subtotal + deliveryCharge;
 
     const payload: OrderPayload = {
@@ -89,7 +88,7 @@ export default function CheckoutForm({
         productName: i.productName,
         size: i.size,
         quantity: i.quantity,
-        price: unitPrice,
+        price: getUnitPriceForProduct(i.productCode, items),
       })),
       deliveryCharge,
       total,
@@ -131,9 +130,15 @@ export default function CheckoutForm({
         Delivery Details
       </h2>
 
-      <div className="flex items-start gap-2 rounded-2xl bg-muted px-4 py-3 text-sm text-muted-foreground lg:[grid-area:banner]">
-        <PhoneCall className="mt-0.5 size-4 shrink-0 text-gold" />
-        <p>Our representative will call you shortly to confirm your order.</p>
+      <div className="flex flex-col gap-2 lg:[grid-area:banner]">
+        <div className="flex items-start gap-2 rounded-2xl bg-muted px-4 py-3 text-sm text-muted-foreground">
+          <PhoneCall className="mt-0.5 size-4 shrink-0 text-gold" />
+          <p>Our representative will call you shortly to confirm your order.</p>
+        </div>
+        <p className="rounded-2xl bg-gold/10 px-4 py-3 text-xs font-medium text-black">
+          Orders of {formatCurrency(1000)}+ get delivery for just {formatCurrency(50)}.
+          Orders of {formatCurrency(1500)}+ get FREE delivery!
+        </p>
       </div>
 
       <div className="flex flex-col gap-1.5 lg:[grid-area:name]">

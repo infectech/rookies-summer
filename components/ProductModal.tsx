@@ -12,7 +12,7 @@ import SizeChart from "@/components/SizeChart";
 import PricingDisplay from "@/components/PricingDisplay";
 import { useCart } from "@/hooks/use-cart";
 import { trackAddToCart, trackViewContent } from "@/lib/pixel";
-import { SALE_PRICE } from "@/lib/pricing";
+import { getUnitPriceForProduct } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 import { BLUR_PLACEHOLDER } from "@/lib/image";
 
@@ -30,6 +30,7 @@ export default function ProductModal({
   const [size, setSize] = useState<Size | null>(null);
   const [activeImage, setActiveImage] = useState(0);
   const addItem = useCart((s) => s.addItem);
+  const cartItems = useCart((s) => s.items);
   const sliderApiRef = useRef<ProductSliderApi | null>(null);
 
   useEffect(() => {
@@ -37,9 +38,13 @@ export default function ProductModal({
       trackViewContent({
         code: product.code,
         name: product.name,
-        price: SALE_PRICE,
+        price: getUnitPriceForProduct(product.code, [
+          ...cartItems,
+          { productCode: product.code, quantity: 1 },
+        ]),
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, product]);
 
   if (!product) return null;
@@ -72,7 +77,10 @@ export default function ProductModal({
       productName: product.name,
       size,
       quantity: 1,
-      price: SALE_PRICE,
+      price: getUnitPriceForProduct(product.code, [
+        ...cartItems,
+        { productCode: product.code, quantity: 1 },
+      ]),
       image: product.images[0],
     };
     addItem(item);
@@ -133,7 +141,7 @@ export default function ProductModal({
               <p className="text-xs uppercase tracking-wider text-muted-foreground">
                 {product.code}
               </p>
-              <PricingDisplay className="mt-2" />
+              <PricingDisplay className="mt-2" productCode={product.code} />
             </div>
 
             <div className="text-sm leading-relaxed text-muted-foreground">

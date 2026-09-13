@@ -41,8 +41,23 @@ export function getRegularDeliveryCharge(district: string): number {
     : DELIVERY_CHARGE_OUTSIDE_DHAKA;
 }
 
-export function getDeliveryCharge(district: string, itemCount = 0): number {
-  if (itemCount >= 2) return DELIVERY_CHARGE_MULTIBUY;
+export const FREE_DELIVERY_THRESHOLD = 1500;
+export const REDUCED_DELIVERY_THRESHOLD = 1000;
+export const REDUCED_DELIVERY_CHARGE = 50;
+
+/**
+ * Delivery fee is based on order subtotal (not item count):
+ * - 1500 tk or more: free delivery
+ * - 1000 tk to 1499 tk: flat 50 tk charge
+ * - below 1000 tk: regular district-based charge
+ */
+export function getDeliveryCharge(
+  district: string,
+  itemCountOrSubtotal = 0
+): number {
+  if (itemCountOrSubtotal >= FREE_DELIVERY_THRESHOLD) return 0;
+  if (itemCountOrSubtotal >= REDUCED_DELIVERY_THRESHOLD)
+    return REDUCED_DELIVERY_CHARGE;
   return getRegularDeliveryCharge(district);
 }
 

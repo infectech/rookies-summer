@@ -8,13 +8,7 @@ import { getDeliveryCharge, getRegularDeliveryCharge } from "@/lib/config";
 import { BLUR_PLACEHOLDER } from "@/lib/image";
 import { Size } from "@/types";
 import { useProducts } from "@/hooks/use-products";
-import {
-  getCartQuantity,
-  getCartUnitPrice,
-  getLineTotal,
-  ORIGINAL_PRICE,
-  SALE_PRICE,
-} from "@/lib/pricing";
+import { getLineTotal, getOriginalPrice } from "@/lib/pricing";
 import { formatCurrency } from "@/lib/utils";
 
 interface OrderSummaryProps {
@@ -27,13 +21,16 @@ export default function OrderSummary({ district }: OrderSummaryProps) {
   const updateQuantity = useCart((s) => s.updateQuantity);
   const updateSize = useCart((s) => s.updateSize);
   const removeItem = useCart((s) => s.removeItem);
-  const itemCount = getCartQuantity(items);
-  const unitPrice = getCartUnitPrice(items);
   const products = useProducts();
   const getProductByCode = (code: string) =>
     products.find((p) => p.code === code);
+  const regularTotal = items.reduce(
+    (sum, item) => sum + getOriginalPrice(item.productCode) * item.quantity,
+    0
+  );
+  const totalSavings = Math.max(0, regularTotal - subtotal);
   const deliveryCharge =
-    district ? getDeliveryCharge(district, itemCount) : null;
+    district ? getDeliveryCharge(district, subtotal) : null;
   const regularDeliveryCharge =
     district ? getRegularDeliveryCharge(district) : null;
   const total = subtotal + (deliveryCharge ?? 0);
@@ -125,23 +122,28 @@ export default function OrderSummary({ district }: OrderSummaryProps) {
       </div>
       <Separator className="my-4" />
       <div className="flex flex-col gap-1.5 text-sm">
-        {itemCount === 1 && (
+        {subtotal > 0 && subtotal < 1000 && (
           <p className="mb-1 rounded-lg bg-[#E53935]/10 px-3 py-2 text-xs font-medium text-[#E53935]">
-            Buy two or more shirts to get FREE delivery all over Bangladesh
+            Order {formatCurrency(1000 - subtotal)} more to unlock {formatCurrency(50)} delivery, or {formatCurrency(1500 - subtotal)} more for FREE delivery.
+          </p>
+        )}
+        {subtotal >= 1000 && subtotal < 1500 && (
+          <p className="mb-1 rounded-lg bg-[#E53935]/10 px-3 py-2 text-xs font-medium text-[#E53935]">
+            Order {formatCurrency(1500 - subtotal)} more to unlock FREE delivery all over Bangladesh
           </p>
         )}
         <div className="flex justify-between">
           <span className="text-muted-foreground">Regular Price</span>
-          <span className="line-through">{formatCurrency(ORIGINAL_PRICE * Math.max(1, itemCount))}</span>
+          <span className="line-through">{formatCurrency(regularTotal)}</span>
         </div>
         <div className="flex justify-between font-medium text-[#E53935]">
           <span>Offer Price</span>
-          <span>{formatCurrency(subtotal || SALE_PRICE)}</span>
+          <span>{formatCurrency(subtotal)}</span>
         </div>
-        {unitPrice < ORIGINAL_PRICE && (
+        {totalSavings > 0 && (
           <div className="flex justify-between text-sm font-medium text-[#E53935]">
             <span>You save</span>
-            <span>{formatCurrency((ORIGINAL_PRICE - unitPrice) * itemCount)}</span>
+            <span>{formatCurrency(totalSavings)}</span>
           </div>
         )}
         <div className="flex justify-between">
@@ -149,7 +151,7 @@ export default function OrderSummary({ district }: OrderSummaryProps) {
           <span>
             {deliveryCharge !== null ? (
               <span className="flex items-center gap-2">
-                 {itemCount >= 2 && <span className="text-xs line-through text-muted-foreground">{formatCurrency(regularDeliveryCharge ?? 0)}</span>}
+                 {subtotal >= 1000 && <span className="text-xs line-through text-muted-foreground">{formatCurrency(regularDeliveryCharge ?? 0)}</span>}
                  {formatCurrency(deliveryCharge)}
               </span>
             ) : (

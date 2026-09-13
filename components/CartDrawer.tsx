@@ -14,10 +14,9 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
-  getCartQuantity,
-  getCartUnitPrice,
   getLineTotal,
-  ORIGINAL_PRICE,
+  getOriginalPrice,
+  getUnitPriceForProduct,
 } from "@/lib/pricing";
 import { formatCurrency } from "@/lib/utils";
 import { BLUR_PLACEHOLDER } from "@/lib/image";
@@ -35,8 +34,11 @@ export default function CartDrawer() {
   const products = useProducts();
   const getProductByCode = (code: string) =>
     products.find((p) => p.code === code);
-  const cartQuantity = getCartQuantity(items);
-  const unitPrice = getCartUnitPrice(items);
+  const totalSavings = items.reduce((sum, item) => {
+    const unitPrice = getUnitPriceForProduct(item.productCode, items);
+    const original = getOriginalPrice(item.productCode);
+    return sum + Math.max(0, original - unitPrice) * item.quantity;
+  }, 0);
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && closeCart()}>
@@ -162,20 +164,14 @@ export default function CartDrawer() {
 
             <SheetFooter className="gap-3 border-t border-black/5 bg-white">
               <div className="flex flex-col gap-1.5 text-sm">
-                <div className="flex justify-between text-muted-foreground">
-                  <span>
-                    Unit price
-                  </span>
-                  <span>{formatCurrency(unitPrice)}</span>
-                </div>
                 <div className="flex justify-between text-base font-semibold text-black">
                   <span>Subtotal</span>
                   <span>{formatCurrency(subtotal)}</span>
                 </div>
-                {unitPrice < ORIGINAL_PRICE && (
+                {totalSavings > 0 && (
                   <div className="flex justify-between text-sm font-medium text-[#E53935]">
                     <span>You save</span>
-                    <span>{formatCurrency((ORIGINAL_PRICE - unitPrice) * cartQuantity)}</span>
+                    <span>{formatCurrency(totalSavings)}</span>
                   </div>
                 )}
                 <p className="text-xs text-muted-foreground">

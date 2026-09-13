@@ -11,7 +11,7 @@ import ProductSlider from "@/components/ProductSlider";
 import PricingDisplay from "@/components/PricingDisplay";
 import { useCart } from "@/hooks/use-cart";
 import { trackAddToCart } from "@/lib/pixel";
-import { SALE_PRICE } from "@/lib/pricing";
+import { getUnitPriceForProduct } from "@/lib/pricing";
 import { cn } from "@/lib/utils";
 
 export interface ProductCardProps {
@@ -28,6 +28,7 @@ export function ProductCard({ product, onSelect, index = 0 }: ProductCardProps) 
   const [size, setSize] = useState<Size>(() => availableSizes[0] ?? "M");
   const isStockout = availableSizes.length === 0;
   const addItem = useCart((s) => s.addItem);
+  const cartItems = useCart((s) => s.items);
 
   useEffect(() => {
     if (product.outOfStockSizes?.includes(size)) {
@@ -43,7 +44,10 @@ export function ProductCard({ product, onSelect, index = 0 }: ProductCardProps) 
       productName: product.name,
       size,
       quantity: 1,
-      price: SALE_PRICE,
+      price: getUnitPriceForProduct(product.code, [
+        ...cartItems,
+        { productCode: product.code, quantity: 1 },
+      ]),
       image: product.images[0],
     };
 
@@ -76,11 +80,16 @@ export function ProductCard({ product, onSelect, index = 0 }: ProductCardProps) 
         aria-label={`View ${product.name}`}
       >
         <ProductSlider images={product.images} alt={product.name} className="rounded-none" />
-        {product.isNewArrival && (
-          <Badge className="absolute right-2 top-2 z-10 bg-gold text-black shadow-sm">
-            New Arrival
-          </Badge>
-        )}
+        <div className="absolute right-2 top-2 z-10 flex flex-col items-end gap-1">
+          {product.isNewArrival && (
+            <Badge className="bg-gold text-black shadow-sm">New Arrival</Badge>
+          )}
+          {product.isCheckShirt ? (
+            <Badge className="bg-[#E53935] text-white shadow-sm">GSM 210-240</Badge>
+          ) : (
+            <Badge className="bg-white text-black shadow-sm">☀️ Summer Friendly</Badge>
+          )}
+        </div>
       </div>
 
       <div className="flex flex-1 flex-col gap-1 p-2.5 sm:p-4">
@@ -90,7 +99,7 @@ export function ProductCard({ product, onSelect, index = 0 }: ProductCardProps) 
         <p className="text-[10px] uppercase tracking-wider text-muted-foreground sm:text-xs">
           {product.code}
         </p>
-        <PricingDisplay compact className="mt-1" />
+        <PricingDisplay compact className="mt-1" productCode={product.code} />
 
         <div className="mt-2 grid grid-cols-4 gap-1">
           {sizes.map((option) => {

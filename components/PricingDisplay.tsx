@@ -1,33 +1,36 @@
 import { Flame } from "lucide-react";
 import { useCart } from "@/hooks/use-cart";
 import {
-  getCartQuantity,
   getDiscountPercent,
-  MULTIBUY_PRICE,
-  ORIGINAL_PRICE,
-  SALE_PRICE,
+  getOriginalPrice,
+  getUnitPriceForProduct,
 } from "@/lib/pricing";
 import { cn, formatCurrency } from "@/lib/utils";
 
 interface PricingDisplayProps {
   className?: string;
   compact?: boolean;
+  productCode?: string;
 }
 
 export default function PricingDisplay({
   className,
   compact = false,
+  productCode = "SS",
 }: PricingDisplayProps) {
   const items = useCart((s) => s.items);
-  const qty = getCartQuantity(items);
-  const currentSalePrice = qty >= 2 ? MULTIBUY_PRICE : SALE_PRICE;
-  const discountPercent = getDiscountPercent(ORIGINAL_PRICE, currentSalePrice);
+  const originalPrice = getOriginalPrice(productCode);
+  const currentSalePrice = getUnitPriceForProduct(productCode, [
+    ...items,
+    { productCode, quantity: 1 },
+  ]);
+  const discountPercent = getDiscountPercent(originalPrice, currentSalePrice);
 
   return (
     <div className={cn("flex flex-col gap-2", className)}>
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-muted-foreground line-through">
-          {formatCurrency(ORIGINAL_PRICE)}
+          {formatCurrency(originalPrice)}
         </span>
         <span
           className={cn(
