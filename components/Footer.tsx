@@ -22,6 +22,32 @@ export function Footer() {
             <p className="mt-3 max-w-xs text-sm leading-relaxed text-white/60">
               {SITE_CONFIG.description}
             </p>
+            <div className="mt-4 flex items-center gap-3">
+              <a
+                href="https://www.facebook.com/rookiesdnmco"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow us on Facebook"
+                className="flex size-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-gold hover:text-gold"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" className="size-4">
+                  <path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.89h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94Z" />
+                </svg>
+              </a>
+              <a
+                href="https://www.instagram.com/rookiesdnmco"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Follow us on Instagram"
+                className="flex size-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition-colors hover:border-gold hover:text-gold"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="size-4">
+                  <rect x="3" y="3" width="18" height="18" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                </svg>
+              </a>
+            </div>
           </div>
 
           <div>
@@ -32,6 +58,14 @@ export function Footer() {
               Pay when your order arrives at your doorstep, anywhere in
               Bangladesh. No advance payment required.
             </p>
+            <div className="mt-4 flex items-center gap-4 text-sm text-white/60">
+              <a href="#about" className="transition-colors hover:text-gold">
+                About
+              </a>
+              <a href="/faq" className="transition-colors hover:text-gold">
+                FAQ
+              </a>
+            </div>
           </div>
 
           <div id="contact">
@@ -54,7 +88,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-xs text-white/40 sm:flex-row sm:items-center sm:justify-between">
           <p>
             &copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights
             reserved.
