@@ -122,16 +122,6 @@ export default function OrderSummary({ district }: OrderSummaryProps) {
       </div>
       <Separator className="my-4" />
       <div className="flex flex-col gap-1.5 text-sm">
-        {subtotal > 0 && subtotal < 1000 && (
-          <p className="mb-1 rounded-lg bg-[#E53935]/10 px-3 py-2 text-xs font-medium text-[#E53935]">
-            Order {formatCurrency(1000 - subtotal)} more to unlock {formatCurrency(50)} delivery, or {formatCurrency(1500 - subtotal)} more for FREE delivery.
-          </p>
-        )}
-        {subtotal >= 1000 && subtotal < 1500 && (
-          <p className="mb-1 rounded-lg bg-[#E53935]/10 px-3 py-2 text-xs font-medium text-[#E53935]">
-            Order {formatCurrency(1500 - subtotal)} more to unlock FREE delivery all over Bangladesh
-          </p>
-        )}
         <div className="flex justify-between">
           <span className="text-muted-foreground">Regular Price</span>
           <span className="line-through">{formatCurrency(regularTotal)}</span>
