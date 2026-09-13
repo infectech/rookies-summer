@@ -59,6 +59,14 @@ export default function ProductSlider({
     onApiChange(emblaApi ? { scrollTo } : null);
   }, [emblaApi, onApiChange, scrollTo]);
 
+  useEffect(() => {
+    if (!emblaApi || images.length <= 1) return;
+    const interval = setInterval(() => {
+      emblaApi.scrollNext();
+    }, 2500);
+    return () => clearInterval(interval);
+  }, [emblaApi, images.length]);
+
   return (
     <div className={cn("group relative overflow-hidden rounded-2xl bg-muted", className)}>
       <div className="overflow-hidden" ref={emblaRef}>

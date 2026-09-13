@@ -56,7 +56,7 @@ const productsInCodeOrder: Product[] = productNames.map((name, index) => {
     name,
     description: PRODUCT_DESCRIPTION,
     price: SALE_PRICE,
-    images: [1, 2, 3].map(
+    images: [2, 1, 3].map(
       (n) => `/products/rookies ${String(photoBase + n).padStart(2, "0")}.png`
     ),
     outOfStockSizes: outOfStockMap[code],
@@ -91,72 +91,72 @@ const checkShirtProducts: Product[] = [
   {
     code: "RR01",
     name: "Urban Check",
-    images: [1, 2, 3].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
+    images: [2, 1, 3].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
   },
   {
     code: "RR03",
     name: "Classic Grid",
-    images: [7, 8, 9].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
+    images: [8, 7, 9].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
   },
   {
     code: "RR06",
     name: "Streetline Check",
-    images: [16, 17, 18].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
+    images: [17, 16, 18].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
   },
   {
     code: "RR07",
     name: "Vintage Grid",
-    images: [19, 20, 21].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
+    images: [20, 19, 21].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
   },
   {
     code: "RR08",
     name: "Bold Check",
-    images: [22, 23, 24].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
+    images: [23, 22, 24].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
   },
   {
     code: "RR09",
     name: "Urban Plaid",
-    images: [25, 26, 27].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
+    images: [26, 25, 27].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
   },
   {
     code: "RR10",
     name: "Heritage Check",
-    images: [31, 32, 33].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
+    images: [32, 31, 33].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
   },
   {
     code: "RR12",
     name: "Rugged Check",
-    images: [37, 38, 39].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
+    images: [38, 37, 39].map((n) => `/check-shirts/rookies 05-08-26 RR ${String(n).padStart(2, "0")}.png`),
   },
   {
     code: "RR13",
     name: "Metro Plaid",
-    images: [1, 2, 3].map((n) => `/check-shirts/new-${String(n).padStart(2, "0")}.png`),
+    images: [2, 1, 3].map((n) => `/check-shirts/new-${String(n).padStart(2, "0")}.png`),
   },
   {
     code: "RR14",
     name: "Royal Check",
-    images: [4, 5, 6].map((n) => `/check-shirts/new-${String(n).padStart(2, "0")}.png`),
+    images: [5, 4, 6].map((n) => `/check-shirts/new-${String(n).padStart(2, "0")}.png`),
   },
   {
     code: "RR16",
     name: "Urban Heritage",
-    images: [10, 11, 12].map((n) => `/check-shirts/new-${String(n).padStart(2, "0")}.png`),
+    images: [11, 10, 12].map((n) => `/check-shirts/new-${String(n).padStart(2, "0")}.png`),
   },
   {
     code: "RR17",
     name: "Steel Plaid",
-    images: [13, 14, 15].map((n) => `/check-shirts/new-${String(n).padStart(2, "0")}.png`),
+    images: [14, 13, 15].map((n) => `/check-shirts/new-${String(n).padStart(2, "0")}.png`),
   },
   {
     code: "RR18",
     name: "Classic Line",
-    images: [16, 17, 18].map((n) => `/check-shirts/new-${String(n).padStart(2, "0")}.png`),
+    images: [17, 16, 18].map((n) => `/check-shirts/new-${String(n).padStart(2, "0")}.png`),
   },
   {
     code: "RR20",
     name: "Crown Grid",
-    images: [22, 23, 24].map((n) => `/check-shirts/new-${String(n).padStart(2, "0")}.png`),
+    images: [23, 22, 24].map((n) => `/check-shirts/new-${String(n).padStart(2, "0")}.png`),
   },
 ].map((entry, index) => ({
   id: 2000 + index + 1,

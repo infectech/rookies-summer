@@ -58,7 +58,7 @@ export function Footer() {
               Pay when your order arrives at your doorstep, anywhere in
               Bangladesh. No advance payment required.
             </p>
-            <div className="mt-4 flex items-center gap-4 text-sm text-white/60">
+            <div className="mt-5 flex items-center gap-6 text-base font-semibold text-white">
               <a href="#about" className="transition-colors hover:text-gold">
                 About
               </a>
