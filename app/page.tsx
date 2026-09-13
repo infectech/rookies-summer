@@ -39,19 +39,18 @@ export default function Home() {
 
   return (
     <>
-      <section className="flex w-full justify-center bg-white">
-        <div className="relative h-[40vh] w-full sm:h-[50vh]">
-          <Image
-            src="/hero.png"
-            alt="Rookies DNMCO premium shirt"
-            fill
-            sizes="100vw"
-            priority
-            placeholder="blur"
-            blurDataURL={BLUR_PLACEHOLDER}
-            className="object-contain"
-          />
-        </div>
+      <section className="w-full">
+        <Image
+          src="/hero.png"
+          alt="Rookies DNMCO premium shirt"
+          width={0}
+          height={0}
+          sizes="100vw"
+          priority
+          placeholder="blur"
+          blurDataURL={BLUR_PLACEHOLDER}
+          className="h-auto w-full"
+        />
       </section>
 
       <section id="products" className="mx-auto w-full max-w-[1600px] px-4 py-16 sm:px-6 lg:px-8">
