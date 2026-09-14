@@ -68,6 +68,13 @@ export const SIZE_CHART = [
   { size: "XXL", chest: 46, length: 30 },
 ] as const;
 
+export const TROUSER_SIZE_CHART = [
+  { size: "M", waist: "29–32", hip: 42, length: 37 },
+  { size: "L", waist: "33–35", hip: 44, length: 38 },
+  { size: "XL", waist: "36–38", hip: 46, length: 39 },
+  { size: "XXL", waist: "39–40", hip: 48, length: 39.5 },
+] as const;
+
 export const GOOGLE_SHEET_ENDPOINT =
   process.env.GOOGLE_SHEET_WEBHOOK_URL ?? "";
 

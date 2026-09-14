@@ -169,20 +169,28 @@ const checkShirtProducts: Product[] = [
   isCheckShirt: true,
 }));
 
-const TROUSER_DESCRIPTION = `### Trouser Details
-- Fabric: Premium Stretch Twill
-- Fit: Regular Fit with Elastic Drawstring Waist
-- Feel: Soft, Breathable & Comfortable
-- Comfort: Lightweight & Flexible for All-Day Wear
-- Suitable For: Casual & Everyday Wear
+const TROUSER_DESCRIPTION = `China Angle Contrast Trouser
+
+Elevate your everyday wardrobe with our China Angle Contrast Trouser, crafted for a clean, modern look with effortless comfort. The premium fabric and contrast detailing make it easy to style for both casual and smart-casual occasions.
+
+### Product Details
+- Fabric: Premium China Angle Fabric
+- Fit: Premium Fit
+- Design: Stylish Contrast Panel Detail
+- Finish: Wrinkle-Free & Clean Look
+- Feel: Soft, comfortable & easy to wear
+- Style: Casual & Smart-Casual
 
 ### Wash Care
-- Machine Wash: Cold water / gentle cycle
-- Detergent: Use mild detergent
-- Bleach: Do not bleach
-- Drying: Dry in shade; avoid prolonged direct sunlight
-- Ironing: Iron on low heat
-- Dry Clean: Not required
+- Machine wash in cold water
+- Wash inside out
+- Use mild detergent
+- Wash with similar colors
+- Do not bleach
+- Do not tumble dry
+- Do not iron
+- Dry in shade
+- Do not dry clean
 
 ### Delivery Information
 - Inside Dhaka: 1–2 working days

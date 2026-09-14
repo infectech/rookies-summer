@@ -188,7 +188,7 @@ export default function ProductModal({
               />
             </div>
 
-            <SizeChart />
+            <SizeChart variant={product.isTrouser ? "trouser" : "shirt"} />
 
             <Button
               className={cn(

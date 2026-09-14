@@ -12,32 +12,59 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { SIZE_CHART } from "@/lib/config";
+import { SIZE_CHART, TROUSER_SIZE_CHART } from "@/lib/config";
 
-export default function SizeChart() {
+interface SizeChartProps {
+  variant?: "shirt" | "trouser";
+}
+
+export default function SizeChart({ variant = "shirt" }: SizeChartProps) {
   return (
     <Accordion defaultValue={["size-chart"]}>
       <AccordionItem value="size-chart">
         <AccordionTrigger className="text-sm">Size Chart</AccordionTrigger>
         <AccordionContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Size</TableHead>
-                <TableHead>Chest (in)</TableHead>
-                <TableHead>Length (in)</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {SIZE_CHART.map((row) => (
-                <TableRow key={row.size}>
-                  <TableCell className="font-medium">{row.size}</TableCell>
-                  <TableCell>{row.chest}</TableCell>
-                  <TableCell>{row.length}</TableCell>
+          {variant === "trouser" ? (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Size</TableHead>
+                  <TableHead>Waist (in)</TableHead>
+                  <TableHead>Hip (in)</TableHead>
+                  <TableHead>Length (in)</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {TROUSER_SIZE_CHART.map((row) => (
+                  <TableRow key={row.size}>
+                    <TableCell className="font-medium">{row.size}</TableCell>
+                    <TableCell>{row.waist}</TableCell>
+                    <TableCell>{row.hip}</TableCell>
+                    <TableCell>{row.length}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Size</TableHead>
+                  <TableHead>Chest (in)</TableHead>
+                  <TableHead>Length (in)</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {SIZE_CHART.map((row) => (
+                  <TableRow key={row.size}>
+                    <TableCell className="font-medium">{row.size}</TableCell>
+                    <TableCell>{row.chest}</TableCell>
+                    <TableCell>{row.length}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
           <p className="mt-2 text-xs text-muted-foreground">
             All measurements are in inches.
           </p>
