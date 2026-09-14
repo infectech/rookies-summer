@@ -1,5 +1,5 @@
 import { Product } from "@/types";
-import { CHECK_SHIRT_SALE_PRICE, SALE_PRICE } from "@/lib/pricing";
+import { CHECK_SHIRT_SALE_PRICE, SALE_PRICE, TROUSER_SALE_PRICE } from "@/lib/pricing";
 
 const PRODUCT_DESCRIPTION = `### Shirt Details
 - Fabric: 100% Cotton
@@ -169,9 +169,72 @@ const checkShirtProducts: Product[] = [
   isCheckShirt: true,
 }));
 
+const TROUSER_DESCRIPTION = `### Trouser Details
+- Fabric: Premium Stretch Twill
+- Fit: Regular Fit with Elastic Drawstring Waist
+- Feel: Soft, Breathable & Comfortable
+- Comfort: Lightweight & Flexible for All-Day Wear
+- Suitable For: Casual & Everyday Wear
+
+### Wash Care
+- Machine Wash: Cold water / gentle cycle
+- Detergent: Use mild detergent
+- Bleach: Do not bleach
+- Drying: Dry in shade; avoid prolonged direct sunlight
+- Ironing: Iron on low heat
+- Dry Clean: Not required
+
+### Delivery Information
+- Inside Dhaka: 1–2 working days
+- Outside Dhaka: 2–3 working days
+*Note: Delivery may occasionally be delayed due to unforeseen circumstances or courier-related issues.*`;
+
+// Trouser catalog. Images live in /Trousers, named "rookies <photoNumber>.png".
+// Each product uses 3 consecutive photos, codes numbered TR01+.
+const trouserProducts: Product[] = [
+  {
+    code: "TR01",
+    name: "Brown Stripe",
+    images: [31, 32, 33].map((n) => `/Trousers/rookies ${n}.png`),
+  },
+  {
+    code: "TR02",
+    name: "Sand Trail",
+    images: [34, 35, 36].map((n) => `/Trousers/rookies ${n}.png`),
+  },
+  {
+    code: "TR03",
+    name: "Onyx Track",
+    images: [37, 38, 39].map((n) => `/Trousers/rookies ${n}.png`),
+  },
+  {
+    code: "TR04",
+    name: "Storm Grey",
+    images: [40, 41, 42].map((n) => `/Trousers/rookies ${n}.png`),
+  },
+  {
+    code: "TR05",
+    name: "Chalk White",
+    images: [43, 44, 45].map((n) => `/Trousers/rookies ${n}.png`),
+  },
+].map((entry, index) => ({
+  id: 3000 + index + 1,
+  code: entry.code,
+  name: entry.name,
+  description: TROUSER_DESCRIPTION,
+  price: TROUSER_SALE_PRICE,
+  images: entry.images,
+  outOfStockSizes: outOfStockMap[entry.code],
+  isTrouser: true,
+}));
+
 // Availability-based sorting happens live in hooks/use-products.ts,
 // once real stock data is merged in.
-export const products: Product[] = [...productsInCodeOrder, ...checkShirtProducts];
+export const products: Product[] = [
+  ...productsInCodeOrder,
+  ...checkShirtProducts,
+  ...trouserProducts,
+];
 
 export function getProductByCode(code: string): Product | undefined {
   return products.find((p) => p.code === code);

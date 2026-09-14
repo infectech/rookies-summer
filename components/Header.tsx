@@ -43,6 +43,9 @@ export function Header() {
           <a href="/#products" className="transition-colors hover:text-black">
             Stripe Shirt
           </a>
+          <a href="/#trousers" className="transition-colors hover:text-black">
+            Trousers
+          </a>
         </nav>
 
         <Button

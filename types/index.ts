@@ -10,6 +10,7 @@ export interface Product {
   outOfStockSizes?: Size[];
   isNewArrival?: boolean;
   isCheckShirt?: boolean;
+  isTrouser?: boolean;
 }
 
 export interface CartItem {

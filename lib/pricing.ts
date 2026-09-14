@@ -8,7 +8,11 @@ export const CHECK_SHIRT_ORIGINAL_PRICE = 1200;
 export const CHECK_SHIRT_SALE_PRICE = 600;
 export const CHECK_SHIRT_MULTIBUY_PRICE = 600;
 
-export type PriceGroup = "summer" | "check-shirt";
+export const TROUSER_ORIGINAL_PRICE = 1300;
+export const TROUSER_SALE_PRICE = 799;
+export const TROUSER_MULTIBUY_PRICE = 799;
+
+export type PriceGroup = "summer" | "check-shirt" | "trouser";
 
 const PRICE_TABLE: Record<
   PriceGroup,
@@ -24,10 +28,17 @@ const PRICE_TABLE: Record<
     sale: CHECK_SHIRT_SALE_PRICE,
     multibuy: CHECK_SHIRT_MULTIBUY_PRICE,
   },
+  trouser: {
+    original: TROUSER_ORIGINAL_PRICE,
+    sale: TROUSER_SALE_PRICE,
+    multibuy: TROUSER_MULTIBUY_PRICE,
+  },
 };
 
 export function getPriceGroup(productCode: string): PriceGroup {
-  return productCode.startsWith("RR") ? "check-shirt" : "summer";
+  if (productCode.startsWith("RR")) return "check-shirt";
+  if (productCode.startsWith("TR")) return "trouser";
+  return "summer";
 }
 
 export function getOriginalPrice(productCode: string): number {

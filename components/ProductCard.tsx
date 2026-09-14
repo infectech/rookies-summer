@@ -86,6 +86,8 @@ export function ProductCard({ product, onSelect, index = 0 }: ProductCardProps) 
           )}
           {product.isCheckShirt ? (
             <Badge className="bg-[#E53935] text-white shadow-sm">GSM 210-240</Badge>
+          ) : product.isTrouser ? (
+            <Badge className="bg-white text-black shadow-sm">Premium Fit</Badge>
           ) : (
             <Badge className="bg-white text-black shadow-sm">☀️ Summer Friendly</Badge>
           )}
