@@ -1,7 +1,7 @@
 import { GOOGLE_SHEET_ENDPOINT } from "@/lib/config";
 import { OrderPayload, OrderResponse } from "@/types";
 
-const REQUEST_TIMEOUT_MS = 10_000;
+const REQUEST_TIMEOUT_MS = 15_000;
 
 // Server-side only: called from app/api/order/route.ts, which proxies
 // browser requests so the Apps Script URL and any secrets never ship to

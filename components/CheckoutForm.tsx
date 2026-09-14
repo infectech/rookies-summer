@@ -74,7 +74,13 @@ export default function CheckoutForm({
     const deliveryCharge = getDeliveryCharge(values.district, subtotal);
     const total = subtotal + deliveryCharge;
 
+    const requestId =
+      typeof crypto !== "undefined" && "randomUUID" in crypto
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
     const payload: OrderPayload = {
+      requestId,
       customer: {
         name: values.name,
         phone: values.phone,

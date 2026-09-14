@@ -40,6 +40,7 @@ export interface OrderItemPayload {
 }
 
 export interface OrderPayload {
+  requestId: string;
   customer: CustomerInfo;
   items: OrderItemPayload[];
   deliveryCharge: number;

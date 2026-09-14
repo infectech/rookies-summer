@@ -3,6 +3,7 @@ import { z } from "zod";
 import { submitOrderToSheet } from "@/lib/google-sheet";
 
 const orderSchema = z.object({
+  requestId: z.string().min(1),
   customer: z.object({
     name: z.string().min(1),
     phone: z.string().regex(/^01[3-9]\d{8}$/, "Invalid Bangladeshi phone number"),
