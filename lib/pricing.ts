@@ -1,8 +1,8 @@
 import { CartItem } from "@/types";
 
 export const ORIGINAL_PRICE = 1250;
-export const SALE_PRICE = 750;
-export const MULTIBUY_PRICE = 750;
+export const SALE_PRICE = 650;
+export const MULTIBUY_PRICE = 650;
 
 export const CHECK_SHIRT_ORIGINAL_PRICE = 1200;
 export const CHECK_SHIRT_SALE_PRICE = 600;
