@@ -1,16 +1,21 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Loader2, TriangleAlert } from "lucide-react";
 import { SITE_CONFIG } from "@/lib/config";
 import { formatCurrency } from "@/lib/utils";
 
 interface OrderSuccessProps {
-  orderId: string;
+  orderId: string | null;
   total: number;
+  failed?: boolean;
 }
 
-export default function OrderSuccess({ orderId, total }: OrderSuccessProps) {
+export default function OrderSuccess({
+  orderId,
+  total,
+  failed = false,
+}: OrderSuccessProps) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.96 }}
@@ -23,19 +28,31 @@ export default function OrderSuccess({ orderId, total }: OrderSuccessProps) {
         animate={{ scale: 1 }}
         transition={{ delay: 0.15, type: "spring", stiffness: 200, damping: 14 }}
       >
-        <CheckCircle2 className="size-16 text-gold" strokeWidth={1.5} />
+        {failed ? (
+          <TriangleAlert className="size-16 text-burgundy" strokeWidth={1.5} />
+        ) : (
+          <CheckCircle2 className="size-16 text-gold" strokeWidth={1.5} />
+        )}
       </motion.div>
       <h2 className="font-heading text-2xl font-semibold text-black">
-        Order Successfully Placed
+        {failed ? "Order Confirmation Delayed" : "Order Successfully Placed"}
       </h2>
       <p className="text-sm text-muted-foreground">
-        Thank you for shopping with {SITE_CONFIG.name}. Our representative will
-        call you shortly to confirm delivery.
+        {failed
+          ? "We're having trouble confirming your order right now. If you were charged or you're unsure, please contact us and we'll sort it out."
+          : `Thank you for shopping with ${SITE_CONFIG.name}. Our representative will call you shortly to confirm delivery.`}
       </p>
       <div className="flex w-full flex-col gap-2 rounded-2xl bg-muted p-4">
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Order ID</span>
-          <span className="font-medium text-black">{orderId}</span>
+          <span className="font-medium text-black">
+            {orderId ?? (
+              <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+                <Loader2 className="size-3.5 animate-spin" />
+                Confirming...
+              </span>
+            )}
+          </span>
         </div>
         <div className="flex items-center justify-between text-base">
           <span className="font-semibold text-black">Total Bill</span>

@@ -13,8 +13,10 @@ export default function CheckoutPage() {
   const items = useCart((s) => s.items);
   const subtotal = useCart((s) => s.subtotal());
   const closeCart = useCart((s) => s.closeCart);
+  const [placed, setPlaced] = useState(false);
   const [placedOrderId, setPlacedOrderId] = useState<string | null>(null);
   const [placedTotal, setPlacedTotal] = useState<number | null>(null);
+  const [placedFailed, setPlacedFailed] = useState(false);
 
   useEffect(() => {
     closeCart();
@@ -24,7 +26,7 @@ export default function CheckoutPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (items.length === 0 && !placedOrderId) {
+  if (items.length === 0 && !placed) {
     return (
       <div className="mx-auto flex max-w-lg flex-col items-center gap-4 px-4 py-24 text-center">
         <h1 className="font-heading text-2xl font-semibold text-black">
@@ -52,7 +54,7 @@ export default function CheckoutPage() {
         Continue Shopping
       </Link>
 
-      {!placedOrderId && (
+      {!placed && (
         <>
           <h1 className="mt-4 font-heading text-2xl font-semibold tracking-tight text-black sm:text-3xl">
             Checkout
@@ -63,14 +65,24 @@ export default function CheckoutPage() {
         </>
       )}
 
-      {placedOrderId ? (
-        <OrderSuccess orderId={placedOrderId} total={placedTotal ?? 0} />
+      {placed ? (
+        <OrderSuccess
+          orderId={placedOrderId}
+          total={placedTotal ?? 0}
+          failed={placedFailed}
+        />
       ) : (
         <div className="mt-8 mx-auto max-w-xl lg:max-w-none">
           <CheckoutForm
-            onOrderPlaced={(orderId, total) => {
-              setPlacedOrderId(orderId);
+            onOrderSubmitting={(total) => {
               setPlacedTotal(total);
+              setPlaced(true);
+            }}
+            onOrderPlaced={(orderId) => {
+              setPlacedOrderId(orderId);
+            }}
+            onOrderFailed={() => {
+              setPlacedFailed(true);
             }}
           />
         </div>

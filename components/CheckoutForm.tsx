@@ -5,7 +5,6 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Loader2, PhoneCall } from "lucide-react";
-import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -37,11 +36,15 @@ const checkoutSchema = z.object({
 type CheckoutFormValues = z.infer<typeof checkoutSchema>;
 
 interface CheckoutFormProps {
-  onOrderPlaced?: (orderId: string, total: number) => void;
+  onOrderSubmitting?: (total: number) => void;
+  onOrderPlaced?: (orderId: string) => void;
+  onOrderFailed?: () => void;
 }
 
 export default function CheckoutForm({
+  onOrderSubmitting,
   onOrderPlaced,
+  onOrderFailed,
 }: CheckoutFormProps) {
   const items = useCart((s) => s.items);
   const subtotal = useCart((s) => s.subtotal());
@@ -99,6 +102,15 @@ export default function CheckoutForm({
       total,
     };
 
+    // Navigate to the confirmation screen right away instead of making
+    // the customer watch a spinner for the full round trip — the Sheets
+    // write itself is fast now, but Apps Script's response delivery
+    // still has a few unavoidable seconds of network overhead. The order
+    // ID fills in on that screen once the real response arrives; if it
+    // ultimately fails, that screen switches to an error state instead.
+    onOrderSubmitting?.(total);
+    clearCart();
+
     try {
       const res = await fetch("/api/order", {
         method: "POST",
@@ -109,17 +121,12 @@ export default function CheckoutForm({
 
       if (data.success && data.orderId) {
         trackPurchase(data.orderId, total);
-        onOrderPlaced?.(data.orderId, total);
-        clearCart();
+        onOrderPlaced?.(data.orderId);
       } else {
-        toast.error(
-          data.message ?? "We couldn't place your order. Please try again."
-        );
+        onOrderFailed?.();
       }
     } catch {
-      toast.error(
-        "Something went wrong. Please check your connection and try again."
-      );
+      onOrderFailed?.();
     } finally {
       setSubmitting(false);
     }
