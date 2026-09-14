@@ -16,7 +16,6 @@ import { SITE_CONFIG, META_PIXEL_ID } from "@/lib/config";
 const manrope = Manrope({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 

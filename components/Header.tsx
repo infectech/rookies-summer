@@ -28,7 +28,6 @@ export function Header() {
             alt={SITE_CONFIG.name}
             width={154}
             height={40}
-            priority
             placeholder="blur"
             blurDataURL={BLUR_PLACEHOLDER}
             className="h-10 w-auto object-contain"

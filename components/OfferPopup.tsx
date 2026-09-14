@@ -32,7 +32,6 @@ export function OfferPopup() {
           width={600}
           height={800}
           className="max-h-[90vh] w-full rounded-lg object-contain shadow-2xl"
-          priority
           placeholder="blur"
           blurDataURL={BLUR_PLACEHOLDER}
         />
