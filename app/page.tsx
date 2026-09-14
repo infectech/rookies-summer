@@ -5,18 +5,20 @@ import Image from "next/image";
 import { ShoppingBag } from "lucide-react";
 import { ProductCard } from "@/components/ProductCard";
 import ProductModal from "@/components/ProductModal";
+import ReviewsSection from "@/components/ReviewsSection";
 import { useProducts } from "@/hooks/use-products";
 import { Product } from "@/types";
 import { useCart } from "@/hooks/use-cart";
 import { formatCurrency, cn } from "@/lib/utils";
 import { BLUR_PLACEHOLDER } from "@/lib/image";
 
-type ShirtFilter = "all" | "check" | "stripe";
+type ShirtFilter = "all" | "check" | "stripe" | "trouser";
 
 const FILTERS: { value: ShirtFilter; label: string }[] = [
   { value: "all", label: "All" },
   { value: "check", label: "Check Shirt" },
   { value: "stripe", label: "Stripe Shirt" },
+  { value: "trouser", label: "Trousers" },
 ];
 
 export default function Home() {
@@ -29,8 +31,12 @@ export default function Home() {
   const subtotal = useCart((s) => s.subtotal());
   const openCart = useCart((s) => s.openCart);
   const products = useProducts();
-  const summerProducts = products.filter((p) => !p.isCheckShirt);
+  const summerProducts = products.filter((p) => !p.isCheckShirt && !p.isTrouser);
   const checkShirtProducts = products.filter((p) => p.isCheckShirt);
+  const trouserProducts = products.filter((p) => p.isTrouser);
+  const showStripe = filter === "all" || filter === "stripe";
+  const showCheck = filter === "all" || filter === "check";
+  const showTrouser = filter === "all" || filter === "trouser";
 
   const handleSelect = (product: Product) => {
     setSelectedProduct(product);
@@ -72,7 +78,7 @@ export default function Home() {
           ))}
         </div>
 
-        {filter !== "check" && (
+        {showStripe && (
           <>
             <div className="mb-10 text-center">
               <h2 className="font-heading text-3xl font-semibold text-black">
@@ -96,9 +102,9 @@ export default function Home() {
           </>
         )}
 
-        {filter !== "stripe" && (
+        {showCheck && (
           <>
-            <div className={cn("mb-10 text-center", filter !== "check" && "mt-16")}>
+            <div className={cn("mb-10 text-center", showStripe && "mt-16")}>
               <h2 className="font-heading text-3xl font-semibold text-black">
                 Need Check Shirts?
               </h2>
@@ -120,7 +126,33 @@ export default function Home() {
             </div>
           </>
         )}
+
+        {showTrouser && (
+          <div id="trousers" className="scroll-mt-20">
+            <div className={cn("mb-10 text-center", (showStripe || showCheck) && "mt-16")}>
+              <h2 className="font-heading text-3xl font-semibold text-black">
+                Trousers Built For Everyday Comfort
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Enjoy 40% discount and free delivery on shopping 1500 TK or more.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-5">
+              {trouserProducts.map((product, index) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  onSelect={handleSelect}
+                  index={index}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </section>
+
+      <ReviewsSection />
 
       <ProductModal
         product={selectedProduct}
