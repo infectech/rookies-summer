@@ -32,6 +32,9 @@ export default function ProductSlider({
 }: ProductSliderProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isHeld, setIsHeld] = useState(false);
+  const hold = useCallback(() => setIsHeld(true), []);
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
@@ -60,15 +63,21 @@ export default function ProductSlider({
   }, [emblaApi, onApiChange, scrollTo]);
 
   useEffect(() => {
-    if (!emblaApi || images.length <= 1) return;
+    if (!emblaApi || images.length <= 1 || isHovered || isHeld) return;
     const interval = setInterval(() => {
       emblaApi.scrollNext();
-    }, 2500);
+    }, 4500);
     return () => clearInterval(interval);
-  }, [emblaApi, images.length]);
+  }, [emblaApi, images.length, isHovered, isHeld]);
 
   return (
-    <div className={cn("group relative overflow-hidden rounded-2xl bg-muted", className)}>
+    <div
+      className={cn("group relative overflow-hidden rounded-2xl bg-muted", className)}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={hold}
+      onTouchStart={hold}
+    >
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {images.map((src, i) => (
@@ -98,6 +107,7 @@ export default function ProductSlider({
             aria-label="Previous image"
             onClick={(e) => {
               e.stopPropagation();
+              hold();
               scrollPrev();
             }}
             className="absolute left-2 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-black opacity-0 shadow-sm transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
@@ -109,6 +119,7 @@ export default function ProductSlider({
             aria-label="Next image"
             onClick={(e) => {
               e.stopPropagation();
+              hold();
               scrollNext();
             }}
             className="absolute right-2 top-1/2 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-black opacity-0 shadow-sm transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
@@ -124,6 +135,7 @@ export default function ProductSlider({
                 aria-label={`Go to image ${i + 1}`}
                 onClick={(e) => {
                   e.stopPropagation();
+                  hold();
                   scrollTo(i);
                 }}
                 className={cn(
