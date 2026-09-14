@@ -41,15 +41,14 @@
  * slow-but-successful response — returns the SAME order ID instead of
  * appending a second row. This only needs to cover a client's own
  * back-to-back retries (seconds apart), so remembering just the last
- * one is enough — no loop over the sheet, no growing list to maintain.
+ * one is enough — one Script Properties read + one write per order.
  *
- * PERFORMANCE:
- * Each Script Properties / Sheets call is a real network round-trip to
- * Google's backend, so doPost() minimizes how many it makes per order:
- * one props.getProperties() read covers both the dedup check and the
- * order-sequence lookup, and one props.setProperties() write at the end
- * covers both the new sequence value and the dedup marker, instead of
- * several separate get/setProperty calls.
+ * ORDER ID:
+ * Simple and stateless — no Script Properties counter. Every order ID
+ * is generated directly from the current date and whatever's already
+ * in column A of the current order-cycle sheet: read the existing IDs,
+ * find the highest sequence number for today's prefix, add 1. LockService
+ * (below) makes this race-free under concurrent submissions.
  */
 
 const BASE_SHEET_NAME = "Orders";
@@ -155,30 +154,24 @@ function doPost(e) {
 
     const requestId = String(payload.requestId || "").trim();
 
-    // Single Script Properties read for everything this request needs
-    // (dedup check + order sequence), instead of several separate
-    // getProperty()/getProperties() round-trips.
+    // One Script Properties read for the dedup check.
     const props = PropertiesService.getScriptProperties();
-    const allProps = props.getProperties();
 
     // If this exact submission (by requestId) was already written —
     // e.g. the client retried after a slow-but-successful response —
     // return the same order ID instead of appending a duplicate row.
-    if (requestId && allProps[LAST_REQUEST_ID_KEY] === requestId) {
+    if (requestId && props.getProperty(LAST_REQUEST_ID_KEY) === requestId) {
       return jsonResponse({
         success: true,
-        orderId: allProps[LAST_REQUEST_ORDER_ID_KEY],
+        orderId: props.getProperty(LAST_REQUEST_ORDER_ID_KEY),
       });
     }
 
     // Get the correct 7 PM → 7 PM sheet
     const sheet = getSheet();
 
-    // Generate order ID (doesn't write yet — see generateOrderId())
-    const generated = generateOrderId(sheet, allProps);
-    const orderId = generated.orderId;
-    const orderIdSeqKey = generated.seqKey;
-    const orderIdSeq = generated.seq;
+    // Generate order ID directly from the sheet's existing rows.
+    const orderId = generateOrderId(sheet);
 
     // Actual order timestamp
     const date = Utilities.formatDate(
@@ -253,21 +246,20 @@ function doPost(e) {
       payload.customer.name,
       payload.customer.address,
       payload.customer.district,
-      payload.customer.area,
+      payload.customer.note,
       payload.deliveryCharge,
       "Pending",
     ]);
 
-    // Single batched write for both the order-sequence counter and the
-    // requestId dedup marker, instead of two-plus separate setProperty
-    // calls — each Script Properties round-trip has real latency.
-    const propsToWrite = {};
-    propsToWrite[orderIdSeqKey] = String(orderIdSeq);
+    // Remember this requestId -> orderId pair so an immediate retry of
+    // the same submission short-circuits instead of appending a
+    // duplicate row. One batched write for both properties.
     if (requestId) {
-      propsToWrite[LAST_REQUEST_ID_KEY] = requestId;
-      propsToWrite[LAST_REQUEST_ORDER_ID_KEY] = orderId;
+      props.setProperties({
+        [LAST_REQUEST_ID_KEY]: requestId,
+        [LAST_REQUEST_ORDER_ID_KEY]: orderId,
+      });
     }
-    props.setProperties(propsToWrite);
 
     return jsonResponse({
       success: true,
@@ -377,7 +369,7 @@ function createDailySheet() {
     "Customer Name",
     "Address",
     "District",
-    "Area",
+    "Note",
     "Delivery Charge",
     "Status",
   ]);
@@ -408,8 +400,7 @@ function createDailySheet() {
 
 
 /**
- * Generates order ID based on the current
- * 7 PM → 7 PM order cycle.
+ * Generates order ID based on the current 7 PM → 7 PM order cycle.
  *
  * Example:
  *
@@ -417,64 +408,27 @@ function createDailySheet() {
  * ORD-20260809-0002
  * ORD-20260809-0003
  *
- * The next sequence number is tracked in Script Properties (O(1) read)
- * instead of rescanning every existing order ID on the sheet for every
- * new order. Takes the already-fetched `allProps` (from doPost()'s one
- * props.getProperties() call) instead of doing its own property read —
- * and does NOT write the new value itself; doPost() batches that write
- * together with the requestId dedup marker into a single setProperties()
- * call, since each Script Properties round-trip has real latency.
- * generateOrderId() is only ever called while doPost() holds the script
- * lock, so this read-then-later-write stays race free without any extra
- * locking here.
+ * Stateless — no Script Properties counter to keep in sync. Reads the
+ * existing Order IDs from column A of the current order-cycle sheet,
+ * finds the highest sequence number for today's prefix, and adds 1
+ * (starting at 0001 if there are none yet). Since the sheet is scoped
+ * to a single 7 PM → 7 PM cycle, this is usually a small scan — only
+ * that cycle's own rows, not the whole order history.
  *
- * On the first order of a cycle (or the first order after deploying
- * this counter, or if properties were ever cleared), there's no
- * stored sequence yet — in that one case we fall back to scanning the
- * sheet once, so the counter always picks up above whatever's already
- * there instead of risking a duplicate ID.
+ * generateOrderId() is only ever called while doPost() holds the
+ * script lock, so this read-then-append stays race free: two
+ * concurrent submissions can't compute the same next sequence number.
  *
- * IMPORTANT: deleting rows from the sheet does NOT lower this counter
- * back down — the sequence only ever increases, so IDs are never
- * reused (which would risk collisions/confusion). If you clear out
- * demo/test orders and want the next real order to start back at
- * 0001, run resetOrderSeq() for that cycle's date — see below.
- *
- * Returns { orderId, seqKey, seq } — doPost() uses seqKey/seq to batch
- * the counter write.
+ * Deleting rows from the sheet naturally lowers the next ID too, since
+ * there's no separate counter to fall out of sync with the sheet.
  */
-function generateOrderId(sheet, allProps) {
+function generateOrderId(sheet) {
 
   const cycleDate = getOrderCycleDate();
 
   const orderIdDate = cycleDate.replace(/-/g, "");
 
   const prefix = "ORD-" + orderIdDate + "-";
-
-  const propKey = "orderSeq_" + orderIdDate;
-
-  let seq = parseInt(allProps[propKey], 10);
-
-  if (isNaN(seq)) {
-    seq = maxExistingOrderSeq(sheet, prefix);
-  }
-
-  seq += 1;
-
-  return {
-    orderId: prefix + String(seq).padStart(4, "0"),
-    seqKey: propKey,
-    seq: seq,
-  };
-}
-
-
-/**
- * Scans the sheet's existing Order IDs for the highest sequence
- * number matching the given prefix. Only used to bootstrap the
- * Script Properties counter in generateOrderId() — see there.
- */
-function maxExistingOrderSeq(sheet, prefix) {
 
   const lastRow = sheet.getLastRow();
 
@@ -505,41 +459,7 @@ function maxExistingOrderSeq(sheet, prefix) {
     });
   }
 
-  return maxSeq;
-}
-
-
-/**
- * Manually resets the order-sequence counter for a given cycle date,
- * so the NEXT order placed for that cycle starts back at 0001.
- *
- * Use this only after you've intentionally cleared out demo/test rows
- * from that cycle's sheet and want a clean start — it does not touch
- * the sheet itself, only the stored counter.
- *
- * Run manually in Apps Script:
- *
- * 1. Edit the `dateToReset` value below to the cycle date you want
- *    to reset, e.g. "2026-09-14" (matches the "Orders 2026-09-14"
- *    sheet name).
- * 2. Apps Script > select resetOrderSeq from the function dropdown
- *    > Run.
- *
- * Safe to run even if the property doesn't exist yet.
- */
-function resetOrderSeq() {
-  const dateToReset = "2026-09-14"; // <-- change this, then Run.
-
-  const props = PropertiesService.getScriptProperties();
-  const propKey = "orderSeq_" + dateToReset.replace(/-/g, "");
-
-  props.deleteProperty(propKey);
-
-  Logger.log(
-    "Order sequence for " + dateToReset +
-    " has been reset. The next order for that cycle will start at 0001" +
-    " (or above the highest ID still present on that sheet, if any rows remain)."
-  );
+  return prefix + String(maxSeq + 1).padStart(4, "0");
 }
 
 

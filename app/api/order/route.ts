@@ -9,7 +9,6 @@ const orderSchema = z.object({
     phone: z.string().regex(/^01[3-9]\d{8}$/, "Invalid Bangladeshi phone number"),
     address: z.string().min(1),
     district: z.string().min(1),
-    area: z.string().optional(),
     note: z.string().optional(),
   }),
   items: z

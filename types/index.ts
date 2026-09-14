@@ -27,7 +27,6 @@ export interface CustomerInfo {
   phone: string;
   address: string;
   district: string;
-  area?: string;
   note?: string;
 }
 
