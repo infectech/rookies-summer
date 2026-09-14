@@ -1,6 +1,8 @@
 import { GOOGLE_SHEET_ENDPOINT } from "@/lib/config";
 import { OrderPayload, OrderResponse } from "@/types";
 
+const REQUEST_TIMEOUT_MS = 10_000;
+
 // Server-side only: called from app/api/order/route.ts, which proxies
 // browser requests so the Apps Script URL and any secrets never ship to
 // the client, and so we sidestep the CORS/redirect quirks of Apps Script
@@ -12,12 +14,19 @@ async function postWithRetry(
   let lastError: unknown;
 
   for (let attempt = 1; attempt <= attempts; attempt++) {
+    const controller = new AbortController();
+    const timeout = setTimeout(
+      () => controller.abort(),
+      REQUEST_TIMEOUT_MS
+    );
+
     try {
       const res = await fetch(GOOGLE_SHEET_ENDPOINT, {
         method: "POST",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(payload),
         redirect: "follow",
+        signal: controller.signal,
       });
 
       if (!res.ok) {
@@ -30,10 +39,17 @@ async function postWithRetry(
       }
       return data;
     } catch (err) {
-      lastError = err;
+      lastError =
+        err instanceof Error && err.name === "AbortError"
+          ? new Error(
+              `Sheet API did not respond within ${REQUEST_TIMEOUT_MS}ms`
+            )
+          : err;
       if (attempt < attempts) {
         await new Promise((r) => setTimeout(r, attempt * 500));
       }
+    } finally {
+      clearTimeout(timeout);
     }
   }
 

@@ -154,8 +154,6 @@ function doPost(e) {
     const phone = String(
       payload.customer.phone ?? ""
     ).trim();
-console.log("PHONE RECEIVED:", phone);
-console.log("PHONE TYPE:", typeof phone);
     /**
      * Product codes + sizes.
      *
@@ -362,6 +360,18 @@ function createDailySheet() {
  * ORD-20260809-0001
  * ORD-20260809-0002
  * ORD-20260809-0003
+ *
+ * The next sequence number is tracked in Script Properties (O(1) read
+ * + write) instead of rescanning every existing order ID on the sheet
+ * for every new order. generateOrderId() is only ever called while
+ * doPost() holds the script lock, so this read-then-write stays race
+ * free without any extra locking here.
+ *
+ * On the first order of a cycle (or the first order after deploying
+ * this counter, or if properties were ever cleared), there's no
+ * stored sequence yet — in that one case we fall back to scanning the
+ * sheet once, so the counter always picks up above whatever's already
+ * there instead of risking a duplicate ID.
  */
 function generateOrderId(sheet) {
 
@@ -370,6 +380,31 @@ function generateOrderId(sheet) {
   const orderIdDate = cycleDate.replace(/-/g, "");
 
   const prefix = "ORD-" + orderIdDate + "-";
+
+  const props = PropertiesService.getScriptProperties();
+
+  const propKey = "orderSeq_" + orderIdDate;
+
+  let seq = parseInt(props.getProperty(propKey), 10);
+
+  if (isNaN(seq)) {
+    seq = maxExistingOrderSeq(sheet, prefix);
+  }
+
+  seq += 1;
+
+  props.setProperty(propKey, String(seq));
+
+  return prefix + String(seq).padStart(4, "0");
+}
+
+
+/**
+ * Scans the sheet's existing Order IDs for the highest sequence
+ * number matching the given prefix. Only used to bootstrap the
+ * Script Properties counter in generateOrderId() — see there.
+ */
+function maxExistingOrderSeq(sheet, prefix) {
 
   const lastRow = sheet.getLastRow();
 
@@ -400,11 +435,7 @@ function generateOrderId(sheet) {
     });
   }
 
-  const nextSeq = String(
-    maxSeq + 1
-  ).padStart(4, "0");
-
-  return prefix + nextSeq;
+  return maxSeq;
 }
 
 
