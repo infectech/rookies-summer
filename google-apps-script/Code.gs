@@ -44,6 +44,7 @@ const STOCK_PRODUCT_CODES = [
   "RR01", "RR02", "RR03", "RR04", "RR05", "RR06", "RR07", "RR08", "RR09", "RR10",
   "RR11", "RR12", "RR13", "RR14", "RR15", "RR16", "RR17", "RR18", "RR19", "RR20",
   "SS01", "SS02", "SS03", "SS04", "SS05", "SS06", "SS07", "SS08", "SS09", "SS10",
+  "TR01", "TR02", "TR03", "TR04", "TR05",
 ];
 
 
@@ -431,7 +432,7 @@ function getStockSheet() {
 
 /**
  * Creates the Stock sheet, seeded with every known
- * product code (RR01-RR20, SS01-SS10), all marked in stock.
+ * product code (RR01-RR20, SS01-SS10, TR01-TR05), all marked in stock.
  */
 function createStockSheet() {
   const ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -461,6 +462,52 @@ function createStockSheet() {
   sheet.setFrozenRows(1);
 
   return sheet;
+}
+
+
+/**
+ * Backfills the Stock sheet with any product codes from
+ * STOCK_PRODUCT_CODES that don't have a row yet (e.g. TR01-TR05
+ * after adding the trousers line). Existing rows — and any
+ * out-of-stock marks already set on them — are left untouched.
+ *
+ * createStockSheet() only seeds a brand-new sheet, so once the
+ * Stock sheet already exists (as it does in production) newly
+ * added product codes need this to actually show up as rows.
+ *
+ * Run this function ONCE manually after adding new product codes:
+ *
+ * Apps Script
+ *   ↓
+ * Run
+ *   ↓
+ * addMissingStockRows
+ */
+function addMissingStockRows() {
+  const sheet = getStockSheet();
+
+  const lastRow = sheet.getLastRow();
+  const existingCodes = new Set();
+
+  if (lastRow >= 2) {
+    sheet
+      .getRange(2, 1, lastRow - 1, 1)
+      .getValues()
+      .forEach((row) => {
+        const code = String(row[0]).trim();
+        if (code) existingCodes.add(code);
+      });
+  }
+
+  const missingCodes = STOCK_PRODUCT_CODES.filter(
+    (code) => !existingCodes.has(code)
+  );
+
+  missingCodes.forEach((code) => {
+    sheet.appendRow([code, "", "", "", ""]);
+  });
+
+  return missingCodes;
 }
 
 
