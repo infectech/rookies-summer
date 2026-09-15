@@ -1,8 +1,10 @@
 import { CartItem } from "@/types";
+import { getComboById } from "@/data/combos";
+import { getTierForSlots } from "@/lib/combo-pricing";
 
 export const ORIGINAL_PRICE = 1250;
-export const SALE_PRICE = 650;
-export const MULTIBUY_PRICE = 650;
+export const SALE_PRICE = 700;
+export const MULTIBUY_PRICE = 700;
 
 export const CHECK_SHIRT_ORIGINAL_PRICE = 1200;
 export const CHECK_SHIRT_SALE_PRICE = 600;
@@ -65,14 +67,41 @@ function groupQuantity(
     .reduce((sum, i) => sum + i.quantity, 0);
 }
 
+/**
+ * Maps a price group to the combo whose pricing tiers should also apply to
+ * standalone shopping, so a customer gets the same per-unit price whether
+ * or not they use the combo builder.
+ */
+const GROUP_COMBO_ID: Partial<Record<PriceGroup, string>> = {
+  trouser: "combo-trouser",
+};
+
 export function getUnitPriceForProduct(
   productCode: string,
   items: Pick<CartItem, "quantity" | "productCode">[]
 ): number {
   const group = getPriceGroup(productCode);
-  const qty = groupQuantity(items, group);
   const tier = PRICE_TABLE[group];
-  return qty >= 2 ? tier.multibuy : tier.sale;
+
+  // Summer shirts are a flat price regardless of quantity, matching the
+  // combo builder's per-unit price so customers get the same deal with or
+  // without using the combo flow.
+  if (group === "summer") return tier.sale;
+
+  const comboId = GROUP_COMBO_ID[group];
+  const combo = comboId ? getComboById(comboId) : undefined;
+
+  if (!combo) {
+    const qty = groupQuantity(items, group);
+    return qty >= 2 ? tier.multibuy : tier.sale;
+  }
+
+  const qty = groupQuantity(items, group);
+  if (qty < 2) return tier.sale;
+
+  const tiers = combo.pricingTiers.map((t) => t.slots).sort((a, b) => a - b);
+  const matchedSlots = [...tiers].reverse().find((slots) => qty >= slots) ?? tiers[0];
+  return getTierForSlots(combo, matchedSlots).comboPrice / matchedSlots;
 }
 
 /**

@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { CartItem, Size } from "@/types";
+import { CartItem, ComboCartItem, Size } from "@/types";
 import { getCartSubtotal } from "@/lib/pricing";
 
 interface CartState {
   items: CartItem[];
+  comboItems: ComboCartItem[];
   isOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
@@ -12,6 +13,8 @@ interface CartState {
   removeItem: (productCode: string, size: Size) => void;
   updateQuantity: (productCode: string, size: Size, quantity: number) => void;
   updateSize: (productCode: string, oldSize: Size, newSize: Size) => void;
+  addComboItem: (item: ComboCartItem) => void;
+  removeComboItem: (comboId: string, index: number) => void;
   clearCart: () => void;
   subtotal: () => number;
   itemCount: () => number;
@@ -21,6 +24,7 @@ export const useCart = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
+      comboItems: [],
       isOpen: false,
       openCart: () => set({ isOpen: true }),
       closeCart: () => set({ isOpen: false }),
@@ -91,14 +95,28 @@ export const useCart = create<CartState>()(
             ),
           };
         }),
-      clearCart: () => set({ items: [] }),
-      subtotal: () => getCartSubtotal(get().items),
+      addComboItem: (item) =>
+        set((state) => ({
+          comboItems: [...state.comboItems, item],
+          isOpen: true,
+        })),
+      removeComboItem: (comboId, index) =>
+        set((state) => ({
+          comboItems: state.comboItems.filter(
+            (c, i) => !(c.comboId === comboId && i === index)
+          ),
+        })),
+      clearCart: () => set({ items: [], comboItems: [] }),
+      subtotal: () =>
+        getCartSubtotal(get().items) +
+        get().comboItems.reduce((sum, c) => sum + c.comboPrice * c.quantity, 0),
       itemCount: () =>
-        get().items.reduce((sum, i) => sum + i.quantity, 0),
+        get().items.reduce((sum, i) => sum + i.quantity, 0) +
+        get().comboItems.reduce((sum, c) => sum + c.quantity, 0),
     }),
     {
       name: "revine-cart",
-      partialize: (state) => ({ items: state.items }),
+      partialize: (state) => ({ items: state.items, comboItems: state.comboItems }),
     }
   )
 );

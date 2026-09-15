@@ -27,9 +27,11 @@ export default function CartDrawer() {
   const isOpen = useCart((s) => s.isOpen);
   const closeCart = useCart((s) => s.closeCart);
   const items = useCart((s) => s.items);
+  const comboItems = useCart((s) => s.comboItems);
   const updateQuantity = useCart((s) => s.updateQuantity);
   const updateSize = useCart((s) => s.updateSize);
   const removeItem = useCart((s) => s.removeItem);
+  const removeComboItem = useCart((s) => s.removeComboItem);
   const subtotal = useCart((s) => s.subtotal());
   const products = useProducts();
   const getProductByCode = (code: string) =>
@@ -47,7 +49,7 @@ export default function CartDrawer() {
           <SheetTitle className="font-heading text-lg">Your Cart</SheetTitle>
         </SheetHeader>
 
-        {items.length === 0 ? (
+        {items.length === 0 && comboItems.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4 text-center">
             <ShoppingBag className="size-12 text-muted-foreground/40" />
             <p className="text-sm text-muted-foreground">
@@ -66,6 +68,55 @@ export default function CartDrawer() {
           <>
             <div className="flex-1 overflow-y-auto px-4 py-4">
               <div className="flex flex-col gap-4">
+                {comboItems.map((combo, index) => (
+                  <div
+                    key={`${combo.comboId}-${index}`}
+                    className="flex flex-col gap-2 rounded-xl border border-black/10 p-3"
+                  >
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex gap-3">
+                        <div className="relative size-16 shrink-0 overflow-hidden rounded-lg bg-muted">
+                          <Image
+                            src={combo.image}
+                            alt={combo.comboName}
+                            fill
+                            sizes="64px"
+                            className="object-cover"
+                            placeholder="blur"
+                            blurDataURL={BLUR_PLACEHOLDER}
+                          />
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium leading-tight text-black">
+                            {combo.comboName}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {combo.slots.length} pcs combo &middot; Qty {combo.quantity}
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeComboItem(combo.comboId, index)}
+                        className="text-muted-foreground transition-colors hover:text-destructive"
+                        aria-label="Remove combo"
+                      >
+                        <Trash2 className="size-4" />
+                      </button>
+                    </div>
+                    <ul className="flex flex-col gap-1 pl-1 text-xs text-muted-foreground">
+                      {combo.slots.map((slot, i) => (
+                        <li key={i}>
+                          {slot.productName}
+                          {slot.size ? ` — ${slot.size}` : ""}
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="flex justify-end text-sm font-medium text-black">
+                      {formatCurrency(combo.comboPrice * combo.quantity)}
+                    </div>
+                  </div>
+                ))}
                 {items.map((item) => (
                   <div
                     key={`${item.productCode}-${item.size}`}

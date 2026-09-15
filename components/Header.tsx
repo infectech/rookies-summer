@@ -45,6 +45,9 @@ export function Header() {
           <a href="/#trousers" className="transition-colors hover:text-black">
             Trousers
           </a>
+          <a href="/#combo" className="transition-colors hover:text-black">
+            Combo
+          </a>
         </nav>
 
         <Button

@@ -31,6 +31,7 @@ export default function SizeChart({ variant = "shirt" }: SizeChartProps) {
                   <TableHead>Size</TableHead>
                   <TableHead>Waist (in)</TableHead>
                   <TableHead>Hip (in)</TableHead>
+                  <TableHead>Leg Opening (in)</TableHead>
                   <TableHead>Length (in)</TableHead>
                 </TableRow>
               </TableHeader>
@@ -40,6 +41,7 @@ export default function SizeChart({ variant = "shirt" }: SizeChartProps) {
                     <TableCell className="font-medium">{row.size}</TableCell>
                     <TableCell>{row.waist}</TableCell>
                     <TableCell>{row.hip}</TableCell>
+                    <TableCell>{row.legOpening}</TableCell>
                     <TableCell>{row.length}</TableCell>
                   </TableRow>
                 ))}
@@ -66,7 +68,7 @@ export default function SizeChart({ variant = "shirt" }: SizeChartProps) {
             </Table>
           )}
           <p className="mt-2 text-xs text-muted-foreground">
-            All measurements are in inches.
+            All measurements are in inches. Expected deviation &lt; 3%.
           </p>
         </AccordionContent>
       </AccordionItem>

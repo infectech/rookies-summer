@@ -169,17 +169,30 @@ const checkShirtProducts: Product[] = [
   isCheckShirt: true,
 }));
 
-const TROUSER_DESCRIPTION = `China Angle Contrast Trouser
+const TROUSER_DESCRIPTION = `China Exclusive Fabric
 
-Elevate your everyday wardrobe with our China Angle Contrast Trouser, crafted for a clean, modern look with effortless comfort. The premium fabric and contrast detailing make it easy to style for both casual and smart-casual occasions.
+Redefine elegance with our Elite Fabric Contrast Trousers, expertly crafted from exclusive premium Chinese fabric. Designed for the modern gentleman, this trouser blends contemporary contrast styling with superior comfort and long-lasting durability.
 
-### Product Details
-- Fabric: Premium China Angle Fabric
-- Fit: Premium Fit
-- Design: Stylish Contrast Panel Detail
-- Finish: Wrinkle-Free & Clean Look
-- Feel: Soft, comfortable & easy to wear
-- Style: Casual & Smart-Casual
+Every detail is thoughtfully tailored to deliver a sleek silhouette and a confident look, making it a perfect choice for both formal and smart-casual occasions.
+
+### Key Features
+- Front Fly Zipper: Smooth front fly with high-quality zipper closure
+- Dual Zipper Pockets: Two side pockets with secure zipper for safety and style
+- Back Pocket: Designer applique back pocket for everyday convenience
+- Contrast Design: Stylish contrast detailing for a modern and refined look
+- Perfect Tailoring: Precisely measured fit for a sharp and comfortable silhouette
+- Premium Fabric: Made from imported China exclusive fabric for superior quality
+- Anti-Pilling Material: Bobble-free fabric that maintains a fresh look over time
+- Breathable Comfort: Lightweight and breathable for all-day wear
+- Durable Build: Designed for long-lasting performance and everyday use
+
+Whether you're heading to the office, a casual meetup, or a special event, these trousers elevate your style effortlessly. Pair them with a crisp shirt, polo, or blazer to create a polished and sophisticated look.
+
+### Size Chart (in inches, Expected Deviation < 3%)
+- M: Waist 29-32, Hip 42, Leg Opening 13.5, Length 37
+- L: Waist 33-35, Hip 44, Leg Opening 14, Length 38
+- XL: Waist 36-38, Hip 46, Leg Opening 14.5, Length 39
+- XXL: Waist 39-40, Hip 48, Leg Opening 15, Length 39.5
 
 ### Wash Care
 - Machine wash in cold water

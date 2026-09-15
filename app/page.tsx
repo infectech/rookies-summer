@@ -6,19 +6,21 @@ import { ShoppingBag } from "lucide-react";
 import { ProductCard } from "@/components/ProductCard";
 import ProductModal from "@/components/ProductModal";
 import ReviewsSection from "@/components/ReviewsSection";
+import ComboSection from "@/components/combo/ComboSection";
 import { useProducts } from "@/hooks/use-products";
 import { Product } from "@/types";
 import { useCart } from "@/hooks/use-cart";
 import { formatCurrency, cn } from "@/lib/utils";
 import { BLUR_PLACEHOLDER } from "@/lib/image";
 
-type ShirtFilter = "all" | "check" | "stripe" | "trouser";
+type ShirtFilter = "all" | "check" | "stripe" | "trouser" | "combo";
 
 const FILTERS: { value: ShirtFilter; label: string }[] = [
   { value: "all", label: "All" },
   { value: "check", label: "Check Shirt" },
   { value: "stripe", label: "Stripe Shirt" },
   { value: "trouser", label: "Trousers" },
+  { value: "combo", label: "Combo" },
 ];
 
 export default function Home() {
@@ -37,6 +39,7 @@ export default function Home() {
   const showStripe = filter === "all" || filter === "stripe";
   const showCheck = filter === "all" || filter === "check";
   const showTrouser = filter === "all" || filter === "trouser";
+  const showCombo = filter === "all" || filter === "combo";
 
   const handleSelect = (product: Product) => {
     setSelectedProduct(product);
@@ -148,6 +151,21 @@ export default function Home() {
                 />
               ))}
             </div>
+          </div>
+        )}
+
+        {showCombo && (
+          <div id="combo" className="scroll-mt-20">
+            <div className={cn("mb-10 text-center", (showStripe || showCheck || showTrouser) && "mt-16")}>
+              <h2 className="font-heading text-3xl font-semibold text-black">
+                Build Your Own Combo & Save More
+              </h2>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Pick your favorite pieces, bundle them together, and unlock our best pricing.
+              </p>
+            </div>
+
+            <ComboSection />
           </div>
         )}
       </section>
