@@ -75,10 +75,6 @@ export default function ComboProductPage({ combo, allowedProducts }: ComboProduc
     setActiveSlot(null);
   };
 
-  const disabledProductCodes = combo.allowDuplicateProducts
-    ? []
-    : selections.filter((s): s is ComboSlotSelection => !!s).map((s) => s.productCode);
-
   const handleAddToCart = (buyNow: boolean) => {
     if (!allSelected) return;
     const filled = selections as ComboSlotSelection[];
@@ -358,7 +354,6 @@ export default function ComboProductPage({ combo, allowedProducts }: ComboProduc
         open={activeSlot !== null}
         onOpenChange={(open) => !open && setActiveSlot(null)}
         products={allowedProducts}
-        disabledProductCodes={disabledProductCodes}
         unitPrice={unitPrice}
         onSelect={handleProductSelected}
       />

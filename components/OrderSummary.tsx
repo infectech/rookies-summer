@@ -8,6 +8,8 @@ import { getDeliveryCharge, getRegularDeliveryCharge } from "@/lib/config";
 import { BLUR_PLACEHOLDER } from "@/lib/image";
 import { Size } from "@/types";
 import { useProducts } from "@/hooks/use-products";
+import { getComboRegularTotal } from "@/lib/combo-pricing";
+import { getComboById } from "@/data/combos";
 import { getLineTotal, getOriginalPrice } from "@/lib/pricing";
 import { formatCurrency } from "@/lib/utils";
 
@@ -17,17 +19,25 @@ interface OrderSummaryProps {
 
 export default function OrderSummary({ district }: OrderSummaryProps) {
   const items = useCart((s) => s.items);
+  const comboItems = useCart((s) => s.comboItems);
   const subtotal = useCart((s) => s.subtotal());
   const updateQuantity = useCart((s) => s.updateQuantity);
   const updateSize = useCart((s) => s.updateSize);
   const removeItem = useCart((s) => s.removeItem);
+  const removeComboItem = useCart((s) => s.removeComboItem);
   const products = useProducts();
   const getProductByCode = (code: string) =>
     products.find((p) => p.code === code);
-  const regularTotal = items.reduce(
-    (sum, item) => sum + getOriginalPrice(item.productCode) * item.quantity,
-    0
-  );
+  const regularTotal =
+    items.reduce(
+      (sum, item) => sum + getOriginalPrice(item.productCode) * item.quantity,
+      0
+    ) +
+    comboItems.reduce((sum, combo) => {
+      const definition = getComboById(combo.comboId);
+      if (!definition) return sum;
+      return sum + getComboRegularTotal(definition, combo.slots.length) * combo.quantity;
+    }, 0);
   const totalSavings = Math.max(0, regularTotal - subtotal);
   const deliveryCharge =
     district ? getDeliveryCharge(district, subtotal) : null;
@@ -41,6 +51,55 @@ export default function OrderSummary({ district }: OrderSummaryProps) {
         Order Summary
       </h2>
       <div className="mt-4 flex flex-col gap-4">
+        {comboItems.map((combo, index) => (
+          <div
+            key={`${combo.comboId}-${index}`}
+            className="flex flex-col gap-2 rounded-xl border border-black/10 p-3"
+          >
+            <div className="flex items-start justify-between gap-2">
+              <div className="flex gap-3">
+                <div className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-muted">
+                  <Image
+                    src={combo.image}
+                    alt={combo.comboName}
+                    fill
+                    sizes="64px"
+                    className="object-cover"
+                    placeholder="blur"
+                    blurDataURL={BLUR_PLACEHOLDER}
+                  />
+                </div>
+                <div>
+                  <p className="text-sm font-medium leading-tight text-black">
+                    {combo.comboName}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {combo.slots.length} pcs combo &middot; Qty {combo.quantity}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => removeComboItem(combo.comboId, index)}
+                className="text-muted-foreground transition-colors hover:text-destructive"
+                aria-label="Remove combo"
+              >
+                <Trash2 className="size-4" />
+              </button>
+            </div>
+            <ul className="flex flex-col gap-1 pl-1 text-xs text-muted-foreground">
+              {combo.slots.map((slot, i) => (
+                <li key={i}>
+                  {slot.productName}
+                  {slot.size ? ` — ${slot.size}` : ""}
+                </li>
+              ))}
+            </ul>
+            <div className="flex justify-end text-sm font-medium text-black">
+              {formatCurrency(combo.comboPrice * combo.quantity)}
+            </div>
+          </div>
+        ))}
         {items.map((item) => (
           <div key={`${item.productCode}-${item.size}`} className="flex gap-3">
             <div className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-muted">

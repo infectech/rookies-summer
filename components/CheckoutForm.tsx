@@ -20,7 +20,7 @@ import { useCart } from "@/hooks/use-cart";
 import { DISTRICTS, getDeliveryCharge } from "@/lib/config";
 import { getUnitPriceForProduct } from "@/lib/pricing";
 import { trackPurchase } from "@/lib/pixel";
-import { OrderPayload, OrderResponse } from "@/types";
+import { OrderItemPayload, OrderPayload, OrderResponse } from "@/types";
 import OrderSummary from "@/components/OrderSummary";
 
 const checkoutSchema = z.object({
@@ -47,8 +47,10 @@ export default function CheckoutForm({
   onOrderFailed,
 }: CheckoutFormProps) {
   const items = useCart((s) => s.items);
+  const comboItems = useCart((s) => s.comboItems);
   const subtotal = useCart((s) => s.subtotal());
   const clearCart = useCart((s) => s.clearCart);
+  const isEmpty = items.length === 0 && comboItems.length === 0;
 
   const [submitting, setSubmitting] = useState(false);
   const [district, setDistrict] = useState("");
@@ -71,7 +73,7 @@ export default function CheckoutForm({
 
 
   const onSubmit = async (values: CheckoutFormValues) => {
-    if (items.length === 0) return;
+    if (isEmpty) return;
     setSubmitting(true);
 
     const deliveryCharge = getDeliveryCharge(values.district, subtotal);
@@ -82,6 +84,27 @@ export default function CheckoutForm({
         ? crypto.randomUUID()
         : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 
+    const regularItemPayload: OrderItemPayload[] = items.map((i) => ({
+      productCode: i.productCode,
+      productName: i.productName,
+      size: i.size,
+      quantity: i.quantity,
+      price: getUnitPriceForProduct(i.productCode, items),
+    }));
+
+    // Combos are one cart entry but the order sheet only understands flat
+    // per-product/size lines, so each selected slot is written out as its
+    // own line at its share of the combo price.
+    const comboItemPayload: OrderItemPayload[] = comboItems.flatMap((combo) =>
+      combo.slots.map((slot) => ({
+        productCode: slot.productCode,
+        productName: `${combo.comboName} — ${slot.productName}`,
+        size: slot.size ?? "M",
+        quantity: combo.quantity,
+        price: slot.price,
+      }))
+    );
+
     const payload: OrderPayload = {
       requestId,
       customer: {
@@ -91,13 +114,7 @@ export default function CheckoutForm({
         district: values.district,
         note: values.note,
       },
-      items: items.map((i) => ({
-        productCode: i.productCode,
-        productName: i.productName,
-        size: i.size,
-        quantity: i.quantity,
-        price: getUnitPriceForProduct(i.productCode, items),
-      })),
+      items: [...regularItemPayload, ...comboItemPayload],
       deliveryCharge,
       total,
     };
@@ -241,7 +258,7 @@ export default function CheckoutForm({
 
       <Button
         type="submit"
-        disabled={submitting || items.length === 0}
+        disabled={submitting || isEmpty}
         className="mt-2 h-12 w-full rounded-full bg-black text-base text-white hover:bg-gold hover:text-black lg:[grid-area:button]"
       >
         {submitting ? (

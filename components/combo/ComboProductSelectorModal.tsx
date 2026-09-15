@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import { Check, PackageX } from "lucide-react";
+import { PackageX } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import SizeSelector from "@/components/SizeSelector";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,6 @@ interface ComboProductSelectorModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   products: Product[];
-  disabledProductCodes: string[];
   unitPrice: number;
   onSelect: (product: Product, size: Size | null) => void;
 }
@@ -23,7 +22,6 @@ export default function ComboProductSelectorModal({
   open,
   onOpenChange,
   products,
-  disabledProductCodes,
   unitPrice,
   onSelect,
 }: ComboProductSelectorModalProps) {
@@ -64,18 +62,17 @@ export default function ComboProductSelectorModal({
         {!activeProduct && (
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
             {products.map((product) => {
-              const disabled = disabledProductCodes.includes(product.code);
               const outOfStock =
                 sizes.every((s) => product.outOfStockSizes?.includes(s)) ?? false;
               return (
                 <button
                   key={product.code}
                   type="button"
-                  disabled={disabled || outOfStock}
+                  disabled={outOfStock}
                   onClick={() => setActiveCode(product.code)}
                   className={cn(
                     "group relative flex flex-col overflow-hidden rounded-xl border text-left transition-colors",
-                    disabled || outOfStock
+                    outOfStock
                       ? "cursor-not-allowed border-black/10 opacity-50"
                       : "border-black/10 hover:border-black/40"
                   )}
@@ -90,12 +87,7 @@ export default function ComboProductSelectorModal({
                       placeholder="blur"
                       blurDataURL={BLUR_PLACEHOLDER}
                     />
-                    {disabled && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                        <Check className="size-6 text-white" />
-                      </div>
-                    )}
-                    {outOfStock && !disabled && (
+                    {outOfStock && (
                       <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-black/40 text-white">
                         <PackageX className="size-5" />
                         <span className="text-xs font-medium">Out of stock</span>

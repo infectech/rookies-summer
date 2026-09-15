@@ -11,12 +11,14 @@ import { Button } from "@/components/ui/button";
 
 export default function CheckoutPage() {
   const items = useCart((s) => s.items);
+  const comboItems = useCart((s) => s.comboItems);
   const subtotal = useCart((s) => s.subtotal());
   const closeCart = useCart((s) => s.closeCart);
   const [placed, setPlaced] = useState(false);
   const [placedOrderId, setPlacedOrderId] = useState<string | null>(null);
   const [placedTotal, setPlacedTotal] = useState<number | null>(null);
   const [placedFailed, setPlacedFailed] = useState(false);
+  const isEmpty = items.length === 0 && comboItems.length === 0;
 
   useEffect(() => {
     closeCart();
@@ -26,7 +28,7 @@ export default function CheckoutPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (items.length === 0 && !placed) {
+  if (isEmpty && !placed) {
     return (
       <div className="mx-auto flex max-w-lg flex-col items-center gap-4 px-4 py-24 text-center">
         <h1 className="font-heading text-2xl font-semibold text-black">
