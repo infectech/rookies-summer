@@ -10,15 +10,23 @@ export const combos: ComboProduct[] = [
     id: "combo-trouser",
     slug: "premium-trouser-combo",
     name: "Premium Trouser Combo",
-    description:
-      "Build your own trouser combo. Premium China Angle fabric, wrinkle-free finish, styled for casual and smart-casual wear.",
+    description: `Build your own trouser combo from our Elite Fabric Contrast Trousers, crafted from exclusive premium Chinese fabric for the modern gentleman.
+
+### Key Features
+- Front Fly Zipper: Smooth front fly with high-quality zipper closure
+- Dual Zipper Pockets: Two side pockets with secure zipper for safety and style
+- Back Pocket: Designer applique back pocket for everyday convenience
+- Contrast Design: Stylish contrast detailing for a modern and refined look
+- Perfect Tailoring: Precisely measured fit for a sharp and comfortable silhouette
+- Premium Fabric: Made from imported China exclusive fabric for superior quality
+- Anti-Pilling Material: Bobble-free fabric that maintains a fresh look over time
+- Breathable Comfort: Lightweight and breathable for all-day wear
+- Durable Build: Designed for long-lasting performance and everyday use
+
+Pick 2, 3, or 4 trousers to build your combo and save.`,
     comboType: "trouser",
     unitRegularPrice: 1600,
-    images: [
-      "/Trousers/rookies 31.png",
-      "/Trousers/rookies 34.png",
-      "/Trousers/rookies 37.png",
-    ],
+    images: ["/Trouser Combo.png"],
     pricingTiers: [
       { slots: 2, comboPrice: 1400 },
       { slots: 3, comboPrice: 2100 },
@@ -33,15 +41,20 @@ export const combos: ComboProduct[] = [
     id: "combo-summer-shirt",
     slug: "summer-friend-shirt-combo",
     name: "Summer Friend Shirt Combo",
-    description:
-      "Lightweight, breathable cotton shirts bundled for the season. Pick 2 or 3 shirts and save.",
+    description: `Lightweight, breathable cotton shirts bundled for the season. Build your own combo from our Summer Friendly Shirt collection.
+
+### Shirt Details
+- Fabric: 100% Cotton
+- GSM: Approx. 150 GSM
+- Quality: Export Quality
+- Fit: Regular Fit
+- Feel: Soft, Lightweight, Breathable & Comfortable
+- Suitable For: Summer & Everyday Wear
+
+Pick 2 or 3 shirts to build your combo and save.`,
     comboType: "summer-shirt",
     unitRegularPrice: 700,
-    images: [
-      "/products/rookies 01.png",
-      "/products/rookies 04.png",
-      "/products/rookies 07.png",
-    ],
+    images: ["/Summer Shirt Combo.png"],
     pricingTiers: [
       { slots: 2, comboPrice: 1300 },
       { slots: 3, comboPrice: 1900 },

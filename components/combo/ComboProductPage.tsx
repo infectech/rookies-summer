@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { CheckCircle2, Circle, Eye, Heart, Minus, Pencil, Plus } from "lucide-react";
 import { ComboProduct, ComboSlotSelection, Product, Size } from "@/types";
 import { Button } from "@/components/ui/button";
-import ProductSlider from "@/components/ProductSlider";
+import SizeChart from "@/components/SizeChart";
 import ComboProductSelectorModal from "@/components/combo/ComboProductSelectorModal";
 import { useCart } from "@/hooks/use-cart";
 import {
@@ -34,7 +34,6 @@ export default function ComboProductPage({ combo, allowedProducts }: ComboProduc
   const [activeSlot, setActiveSlot] = useState<number | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [wishlisted, setWishlisted] = useState(false);
-  const [activeImage, setActiveImage] = useState(0);
 
   const addComboItem = useCart((s) => s.addComboItem);
   const openCart = useCart((s) => s.openCart);
@@ -103,41 +102,21 @@ export default function ComboProductPage({ combo, allowedProducts }: ComboProduc
 
   return (
     <div className="mx-auto grid w-full max-w-6xl gap-8 px-4 py-8 lg:grid-cols-2 lg:gap-12 lg:px-6">
-      {/* LEFT: gallery */}
-      <div className="flex gap-3">
-        <div className="hidden w-16 shrink-0 flex-col gap-2 sm:flex">
-          {combo.images.map((img, i) => (
-            <button
-              key={img}
-              type="button"
-              onClick={() => setActiveImage(i)}
-              className={cn(
-                "relative aspect-square overflow-hidden rounded-lg border-2 transition-colors",
-                i === activeImage ? "border-gold" : "border-transparent"
-              )}
-            >
-              <Image
-                src={img}
-                alt={`${combo.name} thumbnail ${i + 1}`}
-                fill
-                sizes="64px"
-                className="object-cover"
-                placeholder="blur"
-                blurDataURL={BLUR_PLACEHOLDER}
-              />
-            </button>
-          ))}
-        </div>
-        <div className="relative flex-1">
-          <span className="absolute left-3 top-3 z-10 rounded-full bg-[#E53935] px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
-            Sale
-          </span>
-          <ProductSlider
-            images={combo.images}
+      {/* LEFT: main photo */}
+      <div className="relative overflow-hidden rounded-2xl bg-muted">
+        <span className="absolute left-3 top-3 z-10 rounded-full bg-[#E53935] px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
+          Sale
+        </span>
+        <div className="relative aspect-4/5 w-full">
+          <Image
+            src={combo.images[0]}
             alt={combo.name}
+            fill
             priority
-            onSlideChange={setActiveImage}
-            imageClassName="aspect-4/5"
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            className="object-cover"
+            placeholder="blur"
+            blurDataURL={BLUR_PLACEHOLDER}
           />
         </div>
       </div>
@@ -346,8 +325,33 @@ export default function ComboProductPage({ combo, allowedProducts }: ComboProduc
         </div>
 
         {combo.description && (
-          <p className="text-sm leading-relaxed text-muted-foreground">{combo.description}</p>
+          <div className="text-sm leading-relaxed text-muted-foreground">
+            {combo.description.split("\n").map((line, i) => {
+              if (line.startsWith("### ")) {
+                return (
+                  <h3 key={i} className="mt-4 mb-2 font-semibold text-black first:mt-0">
+                    {line.replace("### ", "")}
+                  </h3>
+                );
+              }
+              if (line.startsWith("- ")) {
+                return (
+                  <ul key={i} className="list-disc pl-5">
+                    <li>{line.replace("- ", "")}</li>
+                  </ul>
+                );
+              }
+              if (line.trim() === "") return null;
+              return (
+                <p key={i} className="mt-1">
+                  {line}
+                </p>
+              );
+            })}
+          </div>
         )}
+
+        <SizeChart variant={combo.comboType === "trouser" ? "trouser" : "shirt"} />
       </div>
 
       <ComboProductSelectorModal
