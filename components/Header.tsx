@@ -36,15 +36,15 @@ export function Header() {
         </Link>
 
         <nav className="hidden items-center gap-8 text-sm font-medium text-black/70 md:flex">
-          <a href="/#check-shirts" className="transition-colors hover:text-black">
+          <Link href="/check-shirts" className="transition-colors hover:text-black">
             Check Shirt
-          </a>
-          <a href="/#products" className="transition-colors hover:text-black">
+          </Link>
+          <Link href="/summer-shirts" className="transition-colors hover:text-black">
             Stripe Shirt
-          </a>
-          <a href="/#trousers" className="transition-colors hover:text-black">
+          </Link>
+          <Link href="/trousers" className="transition-colors hover:text-black">
             Trousers
-          </a>
+          </Link>
           <a href="/#combo" className="transition-colors hover:text-black">
             Combo
           </a>

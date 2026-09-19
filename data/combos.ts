@@ -12,6 +12,11 @@ export const combos: ComboProduct[] = [
     name: "Premium Trouser Combo",
     description: `Build your own trouser combo from our Elite Fabric Contrast Trousers, crafted from exclusive premium Chinese fabric for the modern gentleman.
 
+### Why should you buy from us?
+- Exclusive export quality trousers
+- providing 3 months of exchange on any issue regarding zipper, waistband, drawstring or sewing issue.
+- Exchange will be given as long as stock is available.
+
 ### Key Features
 - Front Fly Zipper: Smooth front fly with high-quality zipper closure
 - Dual Zipper Pockets: Two side pockets with secure zipper for safety and style
@@ -42,6 +47,11 @@ Pick 2, 3, or 4 trousers to build your combo and save.`,
     slug: "summer-friend-shirt-combo",
     name: "Summer Friend Shirt Combo",
     description: `Lightweight, breathable cotton shirts bundled for the season. Build your own combo from our Summer Friendly Shirt collection.
+
+### Why should you buy from us?
+- Exclusive export quality shirts
+- providing 3 months of exchange on any issue regarding zipper, waistband, drawstring or sewing issue.
+- Exchange will be given as long as stock is available.
 
 ### Shirt Details
 - Fabric: 100% Cotton

@@ -1,7 +1,14 @@
 import { Product } from "@/types";
 import { CHECK_SHIRT_SALE_PRICE, SALE_PRICE, TROUSER_SALE_PRICE } from "@/lib/pricing";
 
-const PRODUCT_DESCRIPTION = `### Shirt Details
+const whyBuySection = (itemLabel: string) => `### Why should you buy from us?
+- Exclusive export quality ${itemLabel}
+- providing 3 months of exchange on any issue regarding zipper, waistband, drawstring or sewing issue.
+- Exchange will be given as long as stock is available.`;
+
+const PRODUCT_DESCRIPTION = `${whyBuySection("shirts")}
+
+### Shirt Details
 - Fabric: 100% Cotton
 - GSM: Approx. 150 GSM
 - Quality: Export Quality
@@ -63,7 +70,9 @@ const productsInCodeOrder: Product[] = productNames.map((name, index) => {
   };
 });
 
-const CHECK_SHIRT_DESCRIPTION = `### Shirt Details
+const CHECK_SHIRT_DESCRIPTION = `${whyBuySection("shirts")}
+
+### Shirt Details
 - Export Quality Premium Shirt
 - 100% Cotton Fabric
 - Fabric Weight: 210-240 GSM
@@ -174,6 +183,8 @@ const TROUSER_DESCRIPTION = `China Exclusive Fabric
 Redefine elegance with our Elite Fabric Contrast Trousers, expertly crafted from exclusive premium Chinese fabric. Designed for the modern gentleman, this trouser blends contemporary contrast styling with superior comfort and long-lasting durability.
 
 Every detail is thoughtfully tailored to deliver a sleek silhouette and a confident look, making it a perfect choice for both formal and smart-casual occasions.
+
+${whyBuySection("trousers")}
 
 ### Key Features
 - Front Fly Zipper: Smooth front fly with high-quality zipper closure
