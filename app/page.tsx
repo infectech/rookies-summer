@@ -7,11 +7,13 @@ import { ProductCard } from "@/components/ProductCard";
 import ProductModal from "@/components/ProductModal";
 import ReviewsSection from "@/components/ReviewsSection";
 import ComboSection from "@/components/combo/ComboSection";
+import ComboTierCards from "@/components/combo/ComboTierCards";
 import { useProducts } from "@/hooks/use-products";
 import { Product } from "@/types";
 import { useCart } from "@/hooks/use-cart";
 import { formatCurrency, cn } from "@/lib/utils";
 import { BLUR_PLACEHOLDER } from "@/lib/image";
+import { combos } from "@/data/combos";
 
 type ShirtFilter = "all" | "check" | "stripe" | "trouser" | "combo";
 
@@ -36,6 +38,8 @@ export default function Home() {
   const summerProducts = products.filter((p) => !p.isCheckShirt && !p.isTrouser);
   const checkShirtProducts = products.filter((p) => p.isCheckShirt);
   const trouserProducts = products.filter((p) => p.isTrouser);
+  const summerCombo = combos.find((c) => c.isActive && c.comboType === "summer-shirt");
+  const trouserCombo = combos.find((c) => c.isActive && c.comboType === "trouser");
   const showStripe = filter === "all" || filter === "stripe";
   const showCheck = filter === "all" || filter === "check";
   const showTrouser = filter === "all" || filter === "trouser";
@@ -92,6 +96,12 @@ export default function Home() {
               </p>
             </div>
 
+            {summerCombo && (
+              <div className="mb-10">
+                <ComboTierCards combo={summerCombo} />
+              </div>
+            )}
+
             <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-5">
               {summerProducts.map((product, index) => (
                 <ProductCard
@@ -140,6 +150,12 @@ export default function Home() {
                 Enjoy 40% discount and free delivery on shopping 1400 TK or more.
               </p>
             </div>
+
+            {trouserCombo && (
+              <div className="mb-10">
+                <ComboTierCards combo={trouserCombo} />
+              </div>
+            )}
 
             <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-5">
               {trouserProducts.map((product, index) => (

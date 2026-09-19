@@ -10,6 +10,7 @@ import ProductSlider, { ProductSliderApi } from "@/components/ProductSlider";
 import SizeSelector from "@/components/SizeSelector";
 import SizeChart from "@/components/SizeChart";
 import PricingDisplay from "@/components/PricingDisplay";
+import ProductDescription from "@/components/ProductDescription";
 import { useCart } from "@/hooks/use-cart";
 import { trackAddToCart, trackViewContent } from "@/lib/pixel";
 import { getUnitPriceForProduct } from "@/lib/pricing";
@@ -144,38 +145,7 @@ export default function ProductModal({
               <PricingDisplay className="mt-2" productCode={product.code} />
             </div>
 
-            <div className="text-sm leading-relaxed text-muted-foreground">
-              {product.description.split("\n").map((line, i) => {
-                if (line.startsWith("### ")) {
-                  return (
-                    <h3 key={i} className="mt-4 mb-2 font-semibold text-black first:mt-0">
-                      {line.replace("### ", "")}
-                    </h3>
-                  );
-                }
-                if (line.startsWith("- ")) {
-                  return (
-                    <ul key={i} className="list-disc pl-5">
-                      <li>{line.replace("- ", "")}</li>
-                    </ul>
-                  );
-                }
-                if (line.startsWith("*") && line.endsWith("*")) {
-                  return (
-                    <p key={i} className="mt-2 text-xs italic">
-                      {line.replaceAll("*", "")}
-                    </p>
-                  );
-                }
-                if (line.trim() === "") return null;
-                
-                return (
-                  <p key={i} className="mt-1">
-                    {line}
-                  </p>
-                );
-              })}
-            </div>
+            <ProductDescription description={product.description} />
 
             <div>
               <p className="mb-2 text-sm font-medium text-black">

@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ComboProduct } from "@/types";
 import { getAvailableSlotCounts, getComboPrice, getComboSavings } from "@/lib/combo-pricing";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, cn } from "@/lib/utils";
 import { BLUR_PLACEHOLDER } from "@/lib/image";
 
 interface ComboTierCardsProps {
@@ -15,20 +15,36 @@ interface ComboTierCardsProps {
 export default function ComboTierCards({ combo }: ComboTierCardsProps) {
   const slotCounts = getAvailableSlotCounts(combo);
 
+  const isOddCount = slotCounts.length % 2 === 1;
+
   return (
     <div className="grid grid-cols-2 gap-3 sm:gap-6 md:grid-cols-3">
-      {slotCounts.map((slots) => {
+      {slotCounts.map((slots, index) => {
         const image = combo.tierImages?.[slots] ?? combo.images[0];
         const price = getComboPrice(combo, slots);
         const savings = getComboSavings(combo, slots);
+        // On mobile's 2-col grid, a trailing odd-one-out card (e.g. the 4pc
+        // tier after two rows of 2) would otherwise sit half-width with
+        // empty space beside it — span it full width with a horizontal
+        // (photo left, details right) layout instead. Desktop's 3-col grid
+        // is unaffected.
+        const isTrailingOdd = isOddCount && index === slotCounts.length - 1;
 
         return (
           <Link
             key={slots}
             href={`/combo/${combo.slug}?slots=${slots}`}
-            className="group flex flex-col overflow-hidden rounded-2xl border border-black/5 bg-white transition-shadow hover:shadow-lg sm:rounded-3xl"
+            className={cn(
+              "group flex flex-col overflow-hidden rounded-2xl border border-black/5 bg-white transition-shadow hover:shadow-lg sm:rounded-3xl md:col-span-1 md:flex-col",
+              isTrailingOdd && "col-span-2 flex-row md:col-span-1 md:flex-col"
+            )}
           >
-            <div className="relative aspect-square w-full">
+            <div
+              className={cn(
+                "relative aspect-square w-full",
+                isTrailingOdd && "w-2/5 shrink-0 md:w-full"
+              )}
+            >
               <Image
                 src={image}
                 alt={`${slots} Pcs ${combo.name}`}
@@ -39,7 +55,12 @@ export default function ComboTierCards({ combo }: ComboTierCardsProps) {
                 blurDataURL={BLUR_PLACEHOLDER}
               />
             </div>
-            <div className="flex flex-1 flex-col gap-1 p-2.5 sm:gap-2 sm:p-6">
+            <div
+              className={cn(
+                "flex flex-1 flex-col gap-1 p-2.5 sm:gap-2 sm:p-6",
+                isTrailingOdd && "justify-center md:justify-start"
+              )}
+            >
               <h3 className="font-heading text-xs font-semibold leading-tight text-black sm:text-lg md:text-xl">
                 {slots} Pcs — {combo.name}
               </h3>

@@ -7,6 +7,7 @@ import { CheckCircle2, Circle, Eye, Heart, Minus, Pencil, Plus } from "lucide-re
 import { ComboProduct, ComboSlotSelection, Product, Size } from "@/types";
 import { Button } from "@/components/ui/button";
 import SizeChart from "@/components/SizeChart";
+import ProductDescription from "@/components/ProductDescription";
 import ComboProductSelectorModal from "@/components/combo/ComboProductSelectorModal";
 import { useCart } from "@/hooks/use-cart";
 import {
@@ -329,32 +330,7 @@ export default function ComboProductPage({
           </span>
         </div>
 
-        {combo.description && (
-          <div className="text-sm leading-relaxed text-muted-foreground">
-            {combo.description.split("\n").map((line, i) => {
-              if (line.startsWith("### ")) {
-                return (
-                  <h3 key={i} className="mt-4 mb-2 font-semibold text-black first:mt-0">
-                    {line.replace("### ", "")}
-                  </h3>
-                );
-              }
-              if (line.startsWith("- ")) {
-                return (
-                  <ul key={i} className="list-disc pl-5">
-                    <li>{line.replace("- ", "")}</li>
-                  </ul>
-                );
-              }
-              if (line.trim() === "") return null;
-              return (
-                <p key={i} className="mt-1">
-                  {line}
-                </p>
-              );
-            })}
-          </div>
-        )}
+        {combo.description && <ProductDescription description={combo.description} />}
 
         <SizeChart variant={combo.comboType === "trouser" ? "trouser" : "shirt"} />
       </div>
