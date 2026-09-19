@@ -6,7 +6,13 @@ const whyBuySection = (itemLabel: string) => `### Why should you buy from us?
 - providing 3 months of exchange on any issue regarding zipper, waistband, drawstring or sewing issue.
 - Exchange will be given as long as stock is available.`;
 
-const PRODUCT_DESCRIPTION = `${whyBuySection("shirts")}
+const SHIRT_WHY_BUY_SECTION = `### Why Should You Buy From Us?
+- Export-quality cotton shirt made for premium comfort and everyday style.
+- Summer-friendly fabric that makes it one of our best choices for warm weather.
+- 15 Days Exchange Policy for issues related to fabric, buttons, collar, stitching, or other problem.
+- Easy Exchange available as long as your preferred size/design is in stock.`;
+
+const PRODUCT_DESCRIPTION = `${SHIRT_WHY_BUY_SECTION}
 
 ### Shirt Details
 - Fabric: 100% Cotton
@@ -70,7 +76,7 @@ const productsInCodeOrder: Product[] = productNames.map((name, index) => {
   };
 });
 
-const CHECK_SHIRT_DESCRIPTION = `${whyBuySection("shirts")}
+const CHECK_SHIRT_DESCRIPTION = `${SHIRT_WHY_BUY_SECTION}
 
 ### Shirt Details
 - Export Quality Premium Shirt

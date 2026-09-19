@@ -53,10 +53,11 @@ Pick 2, 3, or 4 trousers to build your combo and save.`,
     name: "Summer Friend Shirt Combo",
     description: `Lightweight, breathable cotton shirts bundled for the season. Build your own combo from our Summer Friendly Shirt collection.
 
-### Why should you buy from us?
-- Exclusive export quality shirts
-- providing 3 months of exchange on any issue regarding zipper, waistband, drawstring or sewing issue.
-- Exchange will be given as long as stock is available.
+### Why Should You Buy From Us?
+- Export-quality cotton shirt made for premium comfort and everyday style.
+- Summer-friendly fabric that makes it one of our best choices for warm weather.
+- 15 Days Exchange Policy for issues related to fabric, buttons, collar, stitching, or other problem.
+- Easy Exchange available as long as your preferred size/design is in stock.
 
 ### Shirt Details
 - Fabric: 100% Cotton
