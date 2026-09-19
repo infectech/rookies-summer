@@ -118,7 +118,7 @@ export default function RootLayout({
         <PixelInit />
         <div className="w-full overflow-hidden bg-black py-2 text-xs font-semibold uppercase tracking-widest text-gold sm:text-sm">
           <Marquee speed={70}>
-            🎉 Orders of 1000 TK+ get delivery for just 50 TK 🎉 Orders of 1500 TK+ get FREE Delivery!
+            🎉 Orders of 1000 TK+ get delivery for just 50 TK 🎉 Orders of 1400 TK+ get FREE Delivery!
           </Marquee>
         </div>
         <Header />

@@ -54,6 +54,7 @@ export default function SizeChart({ variant = "shirt" }: SizeChartProps) {
                   <TableHead>Size</TableHead>
                   <TableHead>Chest (in)</TableHead>
                   <TableHead>Length (in)</TableHead>
+                  <TableHead>Sleeve (in)</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -62,6 +63,7 @@ export default function SizeChart({ variant = "shirt" }: SizeChartProps) {
                     <TableCell className="font-medium">{row.size}</TableCell>
                     <TableCell>{row.chest}</TableCell>
                     <TableCell>{row.length}</TableCell>
+                    <TableCell>{row.sleeve}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

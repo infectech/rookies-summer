@@ -88,7 +88,7 @@ export default function Home() {
                 Most Summer Friendly Shirts
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Enjoy 40% discount and free delivery on shopping 1500 TK or more.
+                Enjoy 40% discount and free delivery on shopping 1400 TK or more.
               </p>
             </div>
 
@@ -137,7 +137,7 @@ export default function Home() {
                 Trousers Built For Everyday Comfort
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Enjoy 40% discount and free delivery on shopping 1500 TK or more.
+                Enjoy 40% discount and free delivery on shopping 1400 TK or more.
               </p>
             </div>
 

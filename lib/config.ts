@@ -41,14 +41,14 @@ export function getRegularDeliveryCharge(district: string): number {
     : DELIVERY_CHARGE_OUTSIDE_DHAKA;
 }
 
-export const FREE_DELIVERY_THRESHOLD = 1500;
+export const FREE_DELIVERY_THRESHOLD = 1400;
 export const REDUCED_DELIVERY_THRESHOLD = 1000;
 export const REDUCED_DELIVERY_CHARGE = 50;
 
 /**
  * Delivery fee is based on order subtotal (not item count):
- * - 1500 tk or more: free delivery
- * - 1000 tk to 1499 tk: flat 50 tk charge
+ * - 1400 tk or more: free delivery
+ * - 1000 tk to 1399 tk: flat 50 tk charge
  * - below 1000 tk: regular district-based charge
  */
 export function getDeliveryCharge(
@@ -62,10 +62,10 @@ export function getDeliveryCharge(
 }
 
 export const SIZE_CHART = [
-  { size: "M", chest: 40, length: 27 },
-  { size: "L", chest: 42, length: 28 },
-  { size: "XL", chest: 44, length: 29 },
-  { size: "XXL", chest: 46, length: 30 },
+  { size: "M", chest: 40, length: 28, sleeve: 24 },
+  { size: "L", chest: 42, length: 29, sleeve: 25 },
+  { size: "XL", chest: 44, length: 30, sleeve: 25 },
+  { size: "XXL", chest: 46, length: 31, sleeve: 26 },
 ] as const;
 
 export const TROUSER_SIZE_CHART = [
