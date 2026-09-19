@@ -21,13 +21,20 @@ import { BLUR_PLACEHOLDER } from "@/lib/image";
 interface ComboProductPageProps {
   combo: ComboProduct;
   allowedProducts: Product[];
+  /** Preselected slot count, e.g. from a "4 Pcs Combo" card link (?slots=4). */
+  initialSlots?: number;
 }
 
-export default function ComboProductPage({ combo, allowedProducts }: ComboProductPageProps) {
+export default function ComboProductPage({
+  combo,
+  allowedProducts,
+  initialSlots,
+}: ComboProductPageProps) {
   const slotCounts = useMemo(() => getAvailableSlotCounts(combo), [combo]);
-  const [slotCount, setSlotCount] = useState(
-    slotCounts.includes(combo.defaultSlots) ? combo.defaultSlots : slotCounts[0]
-  );
+  const [slotCount, setSlotCount] = useState(() => {
+    if (initialSlots && slotCounts.includes(initialSlots)) return initialSlots;
+    return slotCounts.includes(combo.defaultSlots) ? combo.defaultSlots : slotCounts[0];
+  });
   const [selections, setSelections] = useState<(ComboSlotSelection | null)[]>(
     Array.from({ length: slotCount }, () => null)
   );
@@ -37,6 +44,8 @@ export default function ComboProductPage({ combo, allowedProducts }: ComboProduc
 
   const addComboItem = useCart((s) => s.addComboItem);
   const openCart = useCart((s) => s.openCart);
+
+  const mainImage = combo.tierImages?.[slotCount] ?? combo.images[0];
 
   const comboPrice = getComboPrice(combo, slotCount);
   const regularTotal = getComboRegularTotal(combo, slotCount);
@@ -105,7 +114,7 @@ export default function ComboProductPage({ combo, allowedProducts }: ComboProduc
         </span>
         <div className="relative aspect-4/5 w-full">
           <Image
-            src={combo.images[0]}
+            src={mainImage}
             alt={combo.name}
             fill
             priority

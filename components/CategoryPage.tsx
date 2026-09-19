@@ -4,12 +4,13 @@ import { useState } from "react";
 import { ShoppingBag } from "lucide-react";
 import { ProductCard } from "@/components/ProductCard";
 import ProductModal from "@/components/ProductModal";
-import ComboSection from "@/components/combo/ComboSection";
+import ComboTierCards from "@/components/combo/ComboTierCards";
 import { useProducts } from "@/hooks/use-products";
 import { Product } from "@/types";
 import { useCart } from "@/hooks/use-cart";
 import { formatCurrency } from "@/lib/utils";
 import { ComboType } from "@/types";
+import { combos } from "@/data/combos";
 
 interface CategoryPageProps {
   title: string;
@@ -51,11 +52,14 @@ export default function CategoryPage({
           <p className="mt-2 text-sm text-muted-foreground">{description}</p>
         </div>
 
-        {comboType && (
-          <div className="mb-16">
-            <ComboSection comboType={comboType} />
-          </div>
-        )}
+        {comboType &&
+          combos
+            .filter((c) => c.isActive && c.comboType === comboType)
+            .map((combo) => (
+              <div key={combo.id} className="mb-16">
+                <ComboTierCards combo={combo} />
+              </div>
+            ))}
 
         <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-5">
           {categoryProducts.map((product, index) => (

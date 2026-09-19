@@ -32,6 +32,11 @@ Pick 2, 3, or 4 trousers to build your combo and save.`,
     comboType: "trouser",
     unitRegularPrice: 1600,
     images: ["/Trouser Combo.png"],
+    tierImages: {
+      2: "/2pc trouser combo.png",
+      3: "/3pc trouser combo.png",
+      4: "/4pc trouser combo.png",
+    },
     pricingTiers: [
       { slots: 2, comboPrice: 1400 },
       { slots: 3, comboPrice: 2100 },
@@ -61,13 +66,19 @@ Pick 2, 3, or 4 trousers to build your combo and save.`,
 - Feel: Soft, Lightweight, Breathable & Comfortable
 - Suitable For: Summer & Everyday Wear
 
-Pick 2 or 3 shirts to build your combo and save.`,
+Pick 2, 3, or 4 shirts to build your combo and save.`,
     comboType: "summer-shirt",
     unitRegularPrice: 700,
     images: ["/Summer Shirt Combo.png"],
+    tierImages: {
+      2: "/2pc summer shirt combo.png",
+      3: "/3pc summer shirt combo.png",
+      4: "/4pc summer shirt combo.png",
+    },
     pricingTiers: [
       { slots: 2, comboPrice: 1300 },
       { slots: 3, comboPrice: 1900 },
+      { slots: 4, comboPrice: 2500 },
     ],
     defaultSlots: 2,
     allowedProductCodes: [

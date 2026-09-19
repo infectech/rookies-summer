@@ -6,6 +6,7 @@ import ComboProductPage from "@/components/combo/ComboProductPage";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ slots?: string }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -18,8 +19,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-export default async function ComboPage({ params }: PageProps) {
+export default async function ComboPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
+  const { slots } = await searchParams;
   const combo = getComboBySlug(slug);
   if (!combo) notFound();
 
@@ -27,5 +29,13 @@ export default async function ComboPage({ params }: PageProps) {
     combo.allowedProductCodes.includes(p.code)
   );
 
-  return <ComboProductPage combo={combo} allowedProducts={allowedProducts} />;
+  const initialSlots = slots ? Number(slots) : undefined;
+
+  return (
+    <ComboProductPage
+      combo={combo}
+      allowedProducts={allowedProducts}
+      initialSlots={initialSlots}
+    />
+  );
 }

@@ -43,6 +43,8 @@ export interface ComboProduct {
   /** Regular price of a single unit; used to compute "regular total" and savings. */
   unitRegularPrice: number;
   images: string[];
+  /** Optional per-slot-count image override, e.g. { 2: "/2pc combo.png" }. */
+  tierImages?: Record<number, string>;
   pricingTiers: ComboPricingTier[];
   /** Default number of slots shown when the page first loads. */
   defaultSlots: number;
