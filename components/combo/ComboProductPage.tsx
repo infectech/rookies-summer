@@ -152,14 +152,14 @@ export default function ComboProductPage({
         {slotCounts.length > 1 && (
           <div>
             <p className="mb-2 text-sm font-medium text-black">Combo Size</p>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {slotCounts.map((count) => (
                 <button
                   key={count}
                   type="button"
                   onClick={() => handleSlotCountChange(count)}
                   className={cn(
-                    "flex h-10 items-center justify-center rounded-full border px-5 text-sm font-medium transition-colors",
+                    "flex h-9 items-center justify-center rounded-full border px-3 text-xs font-medium transition-colors sm:h-10 sm:px-5 sm:text-sm",
                     slotCount === count
                       ? "border-black bg-black text-white"
                       : "border-black/15 bg-white text-black hover:border-black/40"
@@ -174,15 +174,15 @@ export default function ComboProductPage({
 
         {/* Combo slot cards */}
         <div className="-mx-4 overflow-x-auto px-4 sm:mx-0 sm:overflow-visible sm:px-0">
-          <div className="flex items-start gap-2.5 pb-1 sm:flex-wrap sm:gap-3">
+          <div className="flex items-start gap-2 pb-1 sm:flex-wrap sm:gap-3">
             {selections.map((selection, index) => (
-              <div key={index} className="flex items-start gap-2.5 sm:gap-3">
+              <div key={index} className="flex items-start gap-2 sm:gap-3">
                 <div className="flex shrink-0 flex-col items-center gap-1.5">
                   <button
                     type="button"
                     onClick={() => handleSlotClick(index)}
                     className={cn(
-                      "flex size-20 shrink-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-xl border transition-colors sm:size-28",
+                      "flex size-16 shrink-0 flex-col items-center justify-center gap-1 overflow-hidden rounded-xl border transition-colors sm:size-28",
                       selection
                         ? "border-black/15 bg-white"
                         : "border-dashed border-black/20 bg-muted/40 hover:border-black/40"
@@ -201,17 +201,17 @@ export default function ComboProductPage({
                         />
                       </div>
                     ) : (
-                      <Plus className="size-6 text-muted-foreground" />
+                      <Plus className="size-5 text-muted-foreground sm:size-6" />
                     )}
                   </button>
                   {!selection && (
-                    <span className="w-20 text-center text-[11px] leading-tight text-muted-foreground sm:w-28">
+                    <span className="w-16 text-center text-[10px] leading-tight text-muted-foreground sm:w-28 sm:text-[11px]">
                       Please select a product!
                     </span>
                   )}
                 </div>
                 {index < selections.length - 1 && (
-                  <Plus className="mt-6 size-4 shrink-0 text-muted-foreground sm:mt-10" />
+                  <Plus className="mt-5 size-3.5 shrink-0 text-muted-foreground sm:mt-10 sm:size-4" />
                 )}
               </div>
             ))}
