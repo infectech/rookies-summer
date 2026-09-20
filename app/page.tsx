@@ -38,7 +38,6 @@ export default function Home() {
   const summerProducts = products.filter((p) => !p.isCheckShirt && !p.isTrouser);
   const checkShirtProducts = products.filter((p) => p.isCheckShirt);
   const trouserProducts = products.filter((p) => p.isTrouser);
-  const summerCombo = combos.find((c) => c.isActive && c.comboType === "summer-shirt");
   const trouserCombo = combos.find((c) => c.isActive && c.comboType === "trouser");
   const showStripe = filter === "all" || filter === "stripe";
   const showCheck = filter === "all" || filter === "check";
@@ -95,12 +94,6 @@ export default function Home() {
                 Enjoy 40% discount and free delivery on shopping 1400 TK or more.
               </p>
             </div>
-
-            {summerCombo && (
-              <div className="mb-10">
-                <ComboTierCards combo={summerCombo} />
-              </div>
-            )}
 
             <div className="grid grid-cols-2 gap-3 sm:gap-6 lg:grid-cols-5">
               {summerProducts.map((product, index) => (
